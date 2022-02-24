@@ -1,11 +1,7 @@
 /*
   Created By: Mustafa Al-Obaidi
   Code Inspired by: Fei Song
-  File Name: tiny.flex
-  To Build: jflex tiny.flex
-
-  and then after the parser is created
-    javac Lexer.java
+  File Name: cm.flex
 */
    
 /* --------------------------Usercode Section------------------------ */
