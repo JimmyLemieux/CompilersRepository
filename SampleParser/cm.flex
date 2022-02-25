@@ -80,7 +80,7 @@ WhiteSpace     = {LineTerminator} | [ \t\f]
 /* A literal integer is is a number beginning with a number between
    one and nine followed by zero or more numbers between zero and nine
    or just a zero.  */
-number = {0-9}+
+number = [0-9]+
    
 /* A identifier integer is a word beginning a letter between A and
    Z, a and z, or an underscore followed by zero or more letters
