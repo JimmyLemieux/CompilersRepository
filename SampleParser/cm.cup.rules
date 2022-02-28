@@ -1,0 +1,200 @@
+/*
+  Created by: James Lemieux
+  File Name: cm.cup
+  To Build: java java_cup.Main < cm.cup
+*/
+   
+   
+/* ----------------------Preliminary Declarations Section--------------------*/
+   
+/* Import the class java_cup.runtime.*  */
+import java_cup.runtime.*;
+import c1Absyn.*;
+   
+/* Parser code to change the way the parser reports errors (include
+   line and column number of the error). */
+parser code {:
+    
+    /* Change the method report_error so it will display the line and
+       column of where the error occurred in the input as well as the
+       reason for the error which is passed into the method in the
+       String 'message'. */
+    public void report_error(String message, Object info) {
+        CM.PARSE_ERROR = true;
+        /* Create a StringBuffer called 'm' with the string 'Error' in it. */
+        StringBuffer m = new StringBuffer("Error");
+   
+        /* Check if the information passed to the method is the same
+           type as the type java_cup.runtime.Symbol. */
+        if (info instanceof java_cup.runtime.Symbol) {
+            /* Declare a java_cup.runtime.Symbol object 's' with the
+               information in the object info that is being typecasted
+               as a java_cup.runtime.Symbol object. */
+            java_cup.runtime.Symbol s = ((java_cup.runtime.Symbol) info);
+   
+            /* Check if the line number in the input is greater or
+               equal to zero. */
+            if (s.left >= 0) {                
+                /* Add to the end of the StringBuffer error message
+                   the line number of the error in the input. */
+                m.append(" in line "+(s.left+1));   
+                /* Check if the column number in the input is greater
+                   or equal to zero. */
+                if (s.right >= 0)                    
+                    /* Add to the end of the StringBuffer error message
+                       the column number of the error in the input. */
+                    m.append(", column "+(s.right+1));
+            }
+        }
+   
+        /* Add to the end of the StringBuffer error message created in
+           this method the message that was passed into this method. */
+        m.append(" : "+message);
+   
+        /* Print the contents of the StringBuffer 'm', which contains
+           an error message, out on a line. */
+        System.err.println(m);
+    }
+   
+    /* Change the method report_fatal_error so when it reports a fatal
+       error it will display the line and column number of where the
+       fatal error occurred in the input as well as the reason for the
+       fatal error which is passed into the method in the object
+       'message' and then exit.*/
+    public void report_fatal_error(String message, Object info) {
+        report_error(message, info);
+        System.exit(1);
+    }
+
+:};
+
+/* ------------Declaration of Terminals and Non Terminals Section----------- */
+   
+terminal ASSIGN, EQ, NOTEQ, LT, GT, GTEQ, LTEQ, PLUS, MINUS, TIMES, OVER, LPAREN, RPAREN, SEMI, COMMA, LCB, RCB, LSB, RSB
+terminal String ID, NUM;
+terminal IF, ELSE, WHILE, VOID, RETURN, INT
+terminal ERROR;
+
+non terminal VarDec params, variable_declaration;
+non terminal Exp statement, expression, simple_expression;
+non terminal CompoundExp compound_statement;
+non terminal Dec declaration, function_declaration;
+non terminal DecList program, declaration_list;
+non terminal VarDecList param_list, local_declarations;
+non terminal ExpList statement_list, expression_list;
+
+/*precedence*/
+precedence right ASSIGN;
+precedence left COMMA, ELSE, ERROR;
+precedence nonassoc EQ, NOTEQ, LT, LTEQ, GT, GTEQ;
+precedence left PLUS, MINUS;
+precedence left TIMES, OVER;
+
+/* ----------------------------Grammar Section-------------------- */ 
+start with program;
+
+program             ::= declaration_list
+                    | ERROR
+                    ;
+
+type_specifier      ::= INT | VOID ;
+
+declaration_list    ::= declaration_list declaration
+                    | declaration
+                    ;
+
+declaration         ::= variable_declaration
+                    | function_declaration
+                    ;
+
+function_declaration :: type_specifier ID LPAREN params RPAREN compound_statement ;
+
+variable_declaration ::= type_specifier ID SEMI
+                    | type_specifier ID LSB NUM RSB SEMI
+                    ;
+
+
+local_declarations  ::= local_declarations var_declaration
+                    |
+                    ;
+
+compound_statement  ::= LBRACE local_declarations statement_list RBRACE
+                    ;
+
+statement_list      ::= statement_list statement
+                    |
+                    ;
+
+param               ::= type_specifier ID
+                    | type_specifier ID LSB RSB
+                    ;
+
+param_list          ::= param_list COMMA params
+                    | params
+                    ;
+
+statement           ::= expresion_stmt |
+                    | compound_statement
+                    | selection_stmt
+                    | iteration_stmt
+                    | return_stmt
+                    ;
+
+expresion_stmt      ::= expresion SEMI
+                    | SEMI
+                    ;
+
+selection_stmt      ::= IF RPAREN expression LPAREN statement
+                    | IF RPAREN expression LPAREN statement ELSE statement
+                    ;
+
+iteration_stmt      ::= WHILE LPAREN expression RPAREN statement
+                    ;
+
+return_stmt         ::= RETURN expression SEMI
+                    | RETURN SEMI
+                    ;
+
+expression          ::= ID ASSIGN expression
+                    | simple_expression
+                    ;
+
+
+simple_expression   ::= additive_expression relop additive_expression
+                    | additive_expression
+                    ;
+
+relop               ::= LTEQ | LT | GTEQ | GE | EQ | NOTEQ;
+
+additive_expression ::= additive_expression addop term
+                    | term
+                    ;
+
+addop               ::= PLUS
+                    | MINUS
+                    ;
+
+term                ::= term mulop factor 
+                    | factor
+                    ;
+
+mulop               ::= TIMES
+                    | OVER
+                    ;
+
+factor              ::= LPAREN expression RPAREN
+                    | variable_declaration
+                    | call
+                    | NUM
+                    ;
+
+call                ::= ID LPAREN args RPAREN
+                    ;
+
+args                ::= arg_list
+                    |
+                    ;
+
+arg_list            ::= arg_list COMMA expression
+                    | expression
+
