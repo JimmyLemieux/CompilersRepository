@@ -83,6 +83,13 @@ non terminal DecList program, declaration_list;
 non terminal VarDecList param_list, local_declarations;
 non terminal ExpList statement_list;
 
+/*precedence*/
+precedence right ASSIGN;
+precedence left COMMA, ELSE, ERROR;
+precedence nonassoc EQ, NOTEQ, LT, LTEQ, GT, GTEQ;
+precedence left PLUS, MINUS;
+precedence left TIMES, OVER;
+
 /* ----------------------------Grammar Section-------------------- */ 
 start with program;
 
