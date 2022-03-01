@@ -1,0 +1,7 @@
+1. Create ABSYN files
+
+2. Create the other cup files (main cup, ordered, layerd cup files)
+
+3. Create test files
+
+4. Test and verify

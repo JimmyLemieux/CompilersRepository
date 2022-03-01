@@ -76,12 +76,12 @@ terminal IF, ELSE, WHILE, VOID, RETURN, INT
 terminal ERROR;
 
 non terminal VarDec params, variable_declaration;
-non terminal Exp statement, expression, simple_expression;
+non terminal Exp statement, expression, simple_expression, expresion_stmt, selection_stmt, iteration_stmt, return_stmt;
 non terminal CompoundExp compound_statement;
 non terminal Dec declaration, function_declaration;
 non terminal DecList program, declaration_list;
 non terminal VarDecList param_list, local_declarations;
-non terminal ExpList statement_list, expression_list;
+non terminal ExpList statement_list;
 
 /*precedence*/
 precedence right ASSIGN;
@@ -133,14 +133,14 @@ param_list          ::= param_list COMMA params
                     | params
                     ;
 
-statement           ::= expresion_stmt |
+statement           ::= expression_stmt |
                     | compound_statement
                     | selection_stmt
                     | iteration_stmt
                     | return_stmt
                     ;
 
-expresion_stmt      ::= expresion SEMI
+expression_stmt      ::= expresion SEMI
                     | SEMI
                     ;
 
