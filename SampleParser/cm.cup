@@ -15,10 +15,6 @@ import c1Absyn.*;
    line and column number of the error). */
 parser code {:
     
-    /* Change the method report_error so it will display the line and
-       column of where the error occurred in the input as well as the
-       reason for the error which is passed into the method in the
-       String 'message'. */
     public void report_error(String message, Object info) {
         CM.PARSE_ERROR = true;
         /* Create a StringBuffer called 'm' with the string 'Error' in it. */
@@ -117,6 +113,10 @@ declaration_list    ::= declaration_list:d1 declaration:d2
                      :}
                     | declaration:d
                      {: RESULT = new DecList(d, NULL); :}
+                    | error:e
+                     {: parser.report_error("Incorrect structure in the declaration_list.", e);
+                        RESULT = new DecList(new ErrorDec(eleft), null);
+                     :}
                     ;
 
 declaration         ::= variable_declaration:v
@@ -127,7 +127,6 @@ declaration         ::= variable_declaration:v
 
 function_declaration :: type_specifier:t ID:i LPAREN params:p RPAREN compound_statement:c 
                      {: RESULT = new FunctionDec(tleft, t, i, p, c); :}
-
                     ;
 
 variable_declaration ::= type_specifier:t ID:i SEMI
@@ -144,13 +143,23 @@ local_declarations  ::= local_declarations:lds var_declaration:vd
                            v = v.tail;
                         v.tail = new VarDecList(vd, null);
                         RESULT = lds;
-                     
                       :}
                     | var_declaration:vd2
                      {: RESULT = new VarDecList(vd2, null); :}
+                    | error:e var_declaration:vd3
+                     {: parser.report_error("Invalid structure in local_declarations", e);
+                        RESULT = new VarDecList(s3, null); 
+                      :}
                     ;
 
-compound_statement  ::= LBRACE local_declarations statement_list RBRACE
+compound_statement  ::= LBRACE:l local_declarations:ld statement_list:sl RBRACE
+                     {: RESULT = new CompoundExp(lleft, ld, sl); :}
+                    | LBRACE:l2 local_declarations:ld RBRACE
+                     {: RESULT = new CompoundExp(l2left, ld, null); :}
+                    | LBRACE:l3 statement_list:sl2 RBRACE
+                     {: RESULT = new CompoundExp(l3left, null, sl2); :}
+                    | LBRACE:l4 RBRACE
+                     {: RESULT = new CompoundExp(l4left, null, null); :}
                     ;
 
 statement_list      ::= statement_list:sl statement:s
@@ -160,7 +169,10 @@ statement_list      ::= statement_list:sl statement:s
                         v.tail = new ExpList(s, null);
                         RESULT = sl;
                      :}
-                    |
+                    | error:e
+                     {: parser.report_error("Incorrect structure of statement_list", e);
+                        RESULT = new ExpList(new ErrorExp(eleft), null);
+                     :}
                     ;
 
 param               ::= type_specifier:t ID:i
@@ -178,6 +190,11 @@ param_list          ::= param_list:p1 COMMA params:p2
                      :}
                     | params:p1
                      {: RESULT = new VarDecList(p1, null); :}
+                    | error:e
+                     {:
+                        parser.report_error("Incorrect structure in param_list", e);
+                        RESULT = new VarDecList(new ErrorVarDec(eleft), null);
+                     :}
                     ;
 
 statement           ::= expression_stmt:es
@@ -291,5 +308,9 @@ arg_list            ::= arg_list:ex1 COMMA expression:ex2
                      :}
                     | expression:e
                      {: RESULT = new ExpList(e, null); :}
+                    | error:ee
+                     {: parser.report_error("Incorrect comma spaced delimeters", ee);
+                        RESULT = new ExpList(new ErrorExp(eeleft), null);
+                     :} 
                     ;
 

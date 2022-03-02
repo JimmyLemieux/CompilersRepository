@@ -20,4 +20,5 @@ public interface AbsynVisitor {
 
   public void visit( WriteExp exp, int level );
 
+  // Make the other function definitions that use our new classes
 }

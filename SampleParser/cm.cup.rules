@@ -73,7 +73,6 @@ parser code {:
 terminal ASSIGN, EQ, NOTEQ, LT, GT, GTEQ, LTEQ, PLUS, MINUS, TIMES, OVER, LPAREN, RPAREN, SEMI, COMMA, LCB, RCB, LSB, RSB
 terminal String ID, NUM;
 terminal IF, ELSE, WHILE, VOID, RETURN, INT
-terminal ERROR;
 
 non terminal VarDec params, variable_declaration;
 non terminal Exp statement, expression, simple_expression, expresion_stmt, selection_stmt, iteration_stmt, return_stmt;
