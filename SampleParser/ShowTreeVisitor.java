@@ -114,38 +114,98 @@ public class ShowTreeVisitor implements AbsynVisitor {
   }
 
   public void visit(ArrayDec exp, int level) {
-
+    indent (level);
+    System.out.print( "ArrayDec: " + exp.arrayName + "[");
+    if (exp.arraySize != null)
+        System.out.print("" + exp.arraySize.value);
+    System.out.print("] - ");
+    if (exp.type.type == 0)
+        System.out.println("VOID");
+    else if (exp.type.type == 1) // is this necessary? a "void" array?
+        System.out.println("INT");
   }
 
   public void visit(CallingExp exp, int level) {
-
+    indent( level );
+    System.out.println( "CallExp: " + exp.funName);
+    level++;
+    ExpList args = exp.args;
+    while (args != null) {
+        args.head.accept(this, level);
+        args = args.tail;
+    }
   }
   
   public void visit(CompoundExp exp, int level) {
-
+    indent (level);
+    System.out.println( "CompoundExp: ");
+    level++;
+    VarDecList dds = exp.decl;
+    while (dds != null) {
+        dds.head.accept(this, level);
+        dds = dds.tail;
+    }
+    ExpList exps = exp.expl;
+    while (exps != null) {
+        exps.head.accept(this, level);
+        exps = exps.tail;
+    }
   }
 
   public void visit(FunctionDec exp, int level) {
-
+    indent (level);
+    System.out.print( "FunctionDec: " + exp.funName + " - ");
+    if (exp.type.type == 0)
+        System.out.println("VOID");
+    else if (exp.type.type == 1)
+        System.out.println("INT");
+    level++;
+    VarDecList parms = exp.param;
+    while (parms != null) {
+        parms.head.accept(this, level);
+        parms = parms.tail;
+    }
+    exp.funBody.accept(this, level);
   }
 
   public void visit(ReturnExp exp, int level) {
-
+    indent (level);
+    System.out.println( "ReturnExp: ");
+    level++;
+    if (exp.expr != null)
+        exp.expr.accept(this, level);
   }
 
   public void visit(SimpDec exp, int level) {
-
+    indent (level);
+    System.out.print( "SimpDec: " + exp.sname + " - ");
+    if (exp.type.type == 0)
+        System.out.println("VOID");
+    else if (exp.type.type == 1)
+        System.out.println("INT");
   }
 
   public void visit(TypeName exp, int level) {
-
+    indent (level);
+    System.out.print( "TypeName: ");
+    if (exp.type == 0)
+        System.out.println("VOID");
+    else if (exp.type == 1)
+        System.out.println("INT");
   }
 
-  public void visit(VarDecList exp, int level) {
-
+  public void visit(VarDecList expList, int level) {
+    while( expList != null ) {
+        expList.head.accept( this, level );
+        expList = expList.tail;
+    }
   }
 
   public void visit(WhileExp exp, int level) {
-
+    indent (level);
+    System.out.println( "WhileExp: ");
+    level++;
+    exp.test.accept(this, level);
+    exp.exps.accept(this, level);
   }
 }

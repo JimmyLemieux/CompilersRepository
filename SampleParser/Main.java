@@ -21,7 +21,7 @@ class Main {
     try {
       parser p = new parser(new Lexer(new FileReader(argv[0])));
       Absyn result = (Absyn)(p.parse().value);      
-      if (SHOW_TREE && result != null) {
+      if (SHOW_TREE) {
          System.out.println("The abstract syntax tree is:");
          ShowTreeVisitor visitor = new ShowTreeVisitor();
          result.accept(visitor, 0); 

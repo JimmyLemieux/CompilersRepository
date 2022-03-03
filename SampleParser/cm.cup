@@ -91,10 +91,6 @@ precedence left TIMES, OVER;
 /* ----------------------------Grammar Section-------------------- */ 
 start with program;
 
-program1            ::=expression:e
-                     {: RESULT = e; :}
-                    ;
-
 program             ::= declaration_list:dl
                      {: RESULT = dl; :}
                     ;
@@ -117,7 +113,6 @@ declaration_list    ::= declaration_list:d1 declaration:d2
                      {: RESULT = new DecList(d, null); :}
                     | error:e
                      {: parser.report_error("Incorrect structure in the declaration_list.", e);
-                        RESULT = new DecList(new ErrorDec(eleft), null);
                      :}
                     ;
 
@@ -256,6 +251,9 @@ relop               ::= LTEQ:i
                      {: RESULT = OpExp.EQ; :}
                     | NOTEQ:i
                      {: RESULT = OpExp.NOTEQ; :}
+                    | GT:i
+                     {: RESULT = OpExp.GT; :}
+                    |
                     ;
 
 additive_expression ::= additive_expression:ae addop:o term:t
