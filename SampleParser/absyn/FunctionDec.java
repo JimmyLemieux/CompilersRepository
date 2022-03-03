@@ -1,6 +1,6 @@
 package absyn;
 
-public class FunctionDec extends Exp {
+public class FunctionDec extends Dec {
     public TypeName type;
     public VarDecList param;
     public CompoundExp funBody;

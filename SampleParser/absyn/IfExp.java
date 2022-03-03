@@ -2,11 +2,12 @@ package absyn;
 
 public class IfExp extends Exp {
   public Exp test;
-  public ExpList thenpart;
-  public ExpList elsepart;
+  public Exp thenpart;
+  public Exp elsepart;
 
-  public IfExp( int position, Exp test, ExpList thenpart, ExpList elsepart ) {
-    this.position = position;
+  public IfExp( int row, int col, Exp test, Exp thenpart, Exp elsepart ) {
+    this.row = row;
+    this.col = col;
     this.test = test;
     this.thenpart = thenpart;
     this.elsepart = elsepart;

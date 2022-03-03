@@ -1,6 +1,7 @@
 package absyn;
 
-public class CompoundExp extends VarDec {
+public class CompoundExp extends Exp {
+    public int position;
     public ExpList expl;
     public VarDecList decl;
 

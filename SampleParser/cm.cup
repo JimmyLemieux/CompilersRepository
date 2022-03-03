@@ -9,14 +9,13 @@
    
 /* Import the class java_cup.runtime.*  */
 import java_cup.runtime.*;
-import c1Absyn.*;
+import absyn.*;
    
 /* Parser code to change the way the parser reports errors (include
    line and column number of the error). */
 parser code {:
     
     public void report_error(String message, Object info) {
-        CM.PARSE_ERROR = true;
         /* Create a StringBuffer called 'm' with the string 'Error' in it. */
         StringBuffer m = new StringBuffer("Error");
    
@@ -115,7 +114,7 @@ declaration_list    ::= declaration_list:d1 declaration:d2
                         RESULT = d1;
                      :}
                     | declaration:d
-                     {: RESULT = new DecList(d, NULL); :}
+                     {: RESULT = new DecList(d, null); :}
                     | error:e
                      {: parser.report_error("Incorrect structure in the declaration_list.", e);
                         RESULT = new DecList(new ErrorDec(eleft), null);
@@ -128,7 +127,7 @@ declaration         ::= variable_declaration:v
                      {: RESULT = fu; :}
                     ;
 
-function_declaration ::= type_specifier:t ID:i LPAREN params:p RPAREN compound_statement:c 
+function_declaration ::= type_specifier:t ID:i LPAREN param_list:p RPAREN compound_statement:c 
                      {: RESULT = new FunctionDec(tleft, t, i, p, c); :}
                     ;
 
@@ -151,7 +150,7 @@ local_declarations  ::= local_declarations:lds variable_declaration:vd
                      {: RESULT = new VarDecList(vd2, null); :}
                     | error:e variable_declaration:vd3
                      {: parser.report_error("Invalid structure in local_declarations", e);
-                        RESULT = new VarDecList(s3, null); 
+                        RESULT = new VarDecList(vd3, null); 
                       :}
                     ;
 
@@ -179,7 +178,7 @@ statement_list      ::= statement_list:sl statement:s
                     ;
 
 param               ::= type_specifier:t ID:i
-                     {: RESULT = new SimpDec(tleft, t, i);}
+                     {: RESULT = new SimpDec(tleft, t, i); :}
                     | type_specifier:t ID:i LSB RSB
                      {: RESULT = new SimpDec(tleft, t, i); :}
                     ;
@@ -207,7 +206,7 @@ statement           ::= expression_stmt:es
                     | selection_stmt:ss
                      {:RESULT = ss; :}
                     | iteration_stmt:is
-                     {: RESULT = is: :}
+                     {: RESULT = is; :}
                     | return_stmt:rs
                      {: RESULT = rs; :}
                     ;
@@ -217,10 +216,10 @@ expression_stmt      ::= expression:e SEMI
                     | SEMI
                     ;
 
-selection_stmt      ::= IF RPAREN expression:e LPAREN statement:s1
+selection_stmt      ::= IF LPAREN expression:e RPAREN statement:s1
                      {: RESULT = new IfExp(eleft, eright, e, s1, null); :}
-                    | IF RPAREN expression:e LPAREN statement:s ELSE statement:s
-                     {: RESULT = new IfExp(eleft, eright, e, s1, s2); :}
+                    | IF LPAREN expression:e RPAREN statement:s2 ELSE statement:s3
+                     {: RESULT = new IfExp(eleft, eright, e, s2, s3); :}
                     ;
 
 iteration_stmt      ::= WHILE LPAREN expression:e RPAREN statement:s
@@ -303,11 +302,11 @@ args                ::= arg_list:a
                     ;
 
 arg_list            ::= arg_list:ex1 COMMA expression:ex2
-                     {: ExpList t = e1;
+                     {: ExpList t = ex1;
                         while( t.tail != null)
                            t = t.tail;
-                        t.tail = new ExpList(e2, null);
-                        RESULT = e1;
+                        t.tail = new ExpList(ex2, null);
+                        RESULT = ex1;
                      :}
                     | expression:e
                      {: RESULT = new ExpList(e, null); :}

@@ -1,6 +1,6 @@
 package absyn;
 
-public class ExpList extends Absyn {
+public class ExpList {
   public Exp head;
   public ExpList tail;
 

@@ -30,8 +30,6 @@ public interface AbsynVisitor {
 
   public void visit( CallingExp exp, int level );
 
-  public void visit( AssignExp exp, int level );
-
   public void visit( ArrayDec exp, int level );
 
   public void visit( ErrorExp exp, int level );
@@ -39,4 +37,10 @@ public interface AbsynVisitor {
   public void visit( ErrorVarDec exp, int level );
 
   public void visit( ErrorDec exp, int level );
+
+  public void visit (ReadExp exp, int level);
+
+  public void visit (WriteExp exp, int level);
+
+  public void visit (RepeatExp exp, int level);
 }

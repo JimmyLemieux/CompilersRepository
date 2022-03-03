@@ -41,7 +41,7 @@ public class ShowTreeVisitor implements AbsynVisitor {
   public void visit( OpExp exp, int level ) {
     indent( level );
     System.out.print( "OpExp:" ); 
-    switch( exp.op ) {
+    switch( exp.operation ) {
       case OpExp.PLUS:
         System.out.println( " + " );
         break;
@@ -62,6 +62,10 @@ public class ShowTreeVisitor implements AbsynVisitor {
         break;
       case OpExp.GT:
         System.out.println( " > " );
+      case OpExp.GE:
+        System.out.println(" >= ");
+      case OpExp.MUL:
+        System.out.println(" * ");
         break;
       default:
         System.out.println( "Unrecognized operator at line " + exp.row + " and column " + exp.col);
@@ -95,5 +99,53 @@ public class ShowTreeVisitor implements AbsynVisitor {
     System.out.println( "WriteExp:" );
     exp.output.accept( this, ++level );
   }
+  
+  // TODO: Fill these out here!
+  public void visit(ErrorDec exp, int level) {
 
+  }
+
+  public void visit(ErrorVarDec exp, int level) {
+
+  }
+
+  public void visit(ErrorExp exp, int level) {
+
+  }
+
+  public void visit(ArrayDec exp, int level) {
+
+  }
+
+  public void visit(CallingExp exp, int level) {
+
+  }
+  
+  public void visit(CompoundExp exp, int level) {
+
+  }
+
+  public void visit(FunctionDec exp, int level) {
+
+  }
+
+  public void visit(ReturnExp exp, int level) {
+
+  }
+
+  public void visit(SimpDec exp, int level) {
+
+  }
+
+  public void visit(TypeName exp, int level) {
+
+  }
+
+  public void visit(VarDecList exp, int level) {
+
+  }
+
+  public void visit(WhileExp exp, int level) {
+
+  }
 }

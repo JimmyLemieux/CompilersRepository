@@ -2,9 +2,9 @@ package absyn;
 
 public class WhileExp extends Exp {
   public Exp test;
-  public ExpList exps;
+  public Exp exps;
 
-  public WhileExp(int position, Exp test, ExpList exps ) {
+  public WhileExp(int position, Exp test, Exp exps ) {
     this.position = position;
     this.test = test;
     this.exps = exps;

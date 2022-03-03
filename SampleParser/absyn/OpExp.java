@@ -11,7 +11,9 @@ public class OpExp extends Exp {
   public final static int LTEQ    = 7;
   public final static int NOTEQ    = 8;
   public final static int GTEQ    = 9;
-  public final static int ERROR    = 10;
+  public final static int GE      = 10;
+  public final static int MUL     = 11;
+  public final static int ERROR    = 12;
 
   public int operation;
   public Exp left;

@@ -1,10 +1,10 @@
 package absyn;
 
-public class ReturnExp extends Exp{
+public class ReturnExp extends Exp {
     public Exp expr;
 
     public ReturnExp(int position, Exp expr) {
-        this.position = pos;
+        this.position = position;
         this.expr = expr;
     }
 
