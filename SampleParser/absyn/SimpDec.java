@@ -1,10 +1,10 @@
 package absyn;
 
-public class SimpDec extends VarDec{
+public class SimpDec extends VarDec {
     public TypeName type;
     public String sname;
 
-    public SimpleDec(int position, TypeName type, String sname)
+    public SimpDec(int position, TypeName type, String sname)
     {
         this.position = position;
         this.type = type;

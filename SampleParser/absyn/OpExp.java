@@ -14,9 +14,10 @@ public class OpExp extends Exp {
   public final static int ERROR    = 10;
 
   public int operation;
-
+  public Exp left;
+  public Exp right;
 // left and right represent the left and right operands int he operation(+,-,*)
-  public OpExp(int left, int right, int operation) {
+  public OpExp(int pos, Exp left, int operation, Exp right) {
     this.left = left;
     this.right = right;
     this.operation = operation;

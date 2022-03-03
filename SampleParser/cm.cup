@@ -66,18 +66,21 @@ parser code {:
 
 /* ------------Declaration of Terminals and Non Terminals Section----------- */
    
-terminal ASSIGN, EQ, NOTEQ, LT, GT, GTEQ, LTEQ, PLUS, MINUS, TIMES, OVER, LPAREN, RPAREN, SEMI, COMMA, LCB, RCB, LSB, RSB
+terminal ASSIGN, EQ, NOTEQ, LT, GT, GTEQ, LTEQ, PLUS, MINUS, TIMES, OVER, LPAREN, RPAREN, SEMI, COMMA, LCB, RCB, LSB, RSB, GE;
 terminal String ID, NUM;
-terminal IF, ELSE, WHILE, VOID, RETURN, INT
+terminal IF, ELSE, WHILE, VOID, RETURN, INT;
+terminal ERROR;
 
-non terminal VarDec params, variable_declaration;
-non terminal Exp statement, expression, simple_expression, expresion_stmt, selection_stmt, iteration_stmt, return_stmt;
+non terminal VarDec params, param, variable_declaration;
+non terminal Exp statement, expression, simple_expression, expression_stmt, selection_stmt, iteration_stmt, return_stmt, additive_expression, term, factor, call;
 non terminal CompoundExp compound_statement;
 non terminal Dec declaration, function_declaration;
 non terminal Exp program1;
+non terminal TypeName type_specifier;
 non terminal DecList program, declaration_list;
 non terminal VarDecList param_list, local_declarations;
-non terminal ExpList statement_list;
+non terminal ExpList statement_list, args, arg_list;
+non terminal Integer relop, addop, mulop;
 
 /*precedence*/
 precedence right ASSIGN;
@@ -89,7 +92,7 @@ precedence left TIMES, OVER;
 /* ----------------------------Grammar Section-------------------- */ 
 start with program;
 
-program1            ::=expresion:e
+program1            ::=expression:e
                      {: RESULT = e; :}
                     ;
 
@@ -125,7 +128,7 @@ declaration         ::= variable_declaration:v
                      {: RESULT = fu; :}
                     ;
 
-function_declaration :: type_specifier:t ID:i LPAREN params:p RPAREN compound_statement:c 
+function_declaration ::= type_specifier:t ID:i LPAREN params:p RPAREN compound_statement:c 
                      {: RESULT = new FunctionDec(tleft, t, i, p, c); :}
                     ;
 
@@ -137,28 +140,28 @@ variable_declaration ::= type_specifier:t ID:i SEMI
                     ;
 
 
-local_declarations  ::= local_declarations:lds var_declaration:vd
+local_declarations  ::= local_declarations:lds variable_declaration:vd
                      {: VarDecList v = lds;
                         while(v.tail != null)
                            v = v.tail;
                         v.tail = new VarDecList(vd, null);
                         RESULT = lds;
                       :}
-                    | var_declaration:vd2
+                    | variable_declaration:vd2
                      {: RESULT = new VarDecList(vd2, null); :}
-                    | error:e var_declaration:vd3
+                    | error:e variable_declaration:vd3
                      {: parser.report_error("Invalid structure in local_declarations", e);
                         RESULT = new VarDecList(s3, null); 
                       :}
                     ;
 
-compound_statement  ::= LBRACE:l local_declarations:ld statement_list:sl RBRACE
+compound_statement  ::= LCB:l local_declarations:ld statement_list:sl RCB
                      {: RESULT = new CompoundExp(lleft, ld, sl); :}
-                    | LBRACE:l2 local_declarations:ld RBRACE
+                    | LCB:l2 local_declarations:ld RCB
                      {: RESULT = new CompoundExp(l2left, ld, null); :}
-                    | LBRACE:l3 statement_list:sl2 RBRACE
+                    | LCB:l3 statement_list:sl2 RCB
                      {: RESULT = new CompoundExp(l3left, null, sl2); :}
-                    | LBRACE:l4 RBRACE
+                    | LCB:l4 RCB
                      {: RESULT = new CompoundExp(l4left, null, null); :}
                     ;
 
@@ -209,7 +212,7 @@ statement           ::= expression_stmt:es
                      {: RESULT = rs; :}
                     ;
 
-expression_stmt      ::= expresion:e SEMI
+expression_stmt      ::= expression:e SEMI
                      {: RESULT = e; :}
                     | SEMI
                     ;
@@ -230,14 +233,14 @@ return_stmt         ::= RETURN:r expression:e SEMI
                      {: RESULT = new ReturnExp(rleft, null); :}
                     ;
 
-expression          ::= var_declaration:v ASSIGN expression:e
+expression          ::= variable_declaration:v ASSIGN expression:e
                      {: RESULT = new AssignExp(vleft, vright, new VarExp(vleft, vright, v), e); :}
                     | simple_expression
                     ;
 
 
 simple_expression   ::= additive_expression:ae1 relop:o additive_expression:ae2
-                     {: RESULT = new OpExp(ae1left, ae1right, ae1, o, ae2); :}
+                     {: RESULT = new OpExp(ae1left, ae1, o, ae2); :}
                     | additive_expression:ae
                      {: RESULT = ae; :}
                     ;
@@ -257,7 +260,7 @@ relop               ::= LTEQ:i
                     ;
 
 additive_expression ::= additive_expression:ae addop:o term:t
-                     {: RESULT = new OpExp(aeleft, aeright, ae, o, t); :}
+                     {: RESULT = new OpExp(aeleft, ae, o, t); :}
                     | term:t
                      {: RESULT = t; :}
                     ;
@@ -269,7 +272,7 @@ addop               ::= PLUS:p
                     ;
 
 term                ::= term:t mulop:o factor:f
-                     {: RESULT = new OpExp(tleft, tright, t, o, f); :}
+                     {: RESULT = new OpExp(tleft, t, o, f); :}
                     | factor:f
                      {: RESULT = f; :}
                     ;
@@ -287,7 +290,7 @@ factor              ::= LPAREN expression:ex RPAREN
                     | call: c
                      {: RESULT = c; :}
                     | NUM:n
-                     {: RESULT = new IntExp(nleft, nright, n); :}
+                     {: RESULT = new IntExp(nleft, n); :}
                     ;
 
 call                ::= ID:i LPAREN args:a RPAREN
