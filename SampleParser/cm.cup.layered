@@ -73,7 +73,6 @@ parser code {:
 terminal ASSIGN, EQ, NOTEQ, LT, GT, GTEQ, LTEQ, PLUS, MINUS, TIMES, OVER, LPAREN, RPAREN, SEMI, COMMA, LCB, RCB, LSB, RSB
 terminal String ID, NUM;
 terminal IF, ELSE, WHILE, VOID, RETURN, INT
-terminal ERROR;
 
 non terminal VarDec params, variable_declaration;
 non terminal Exp statement, expression, simple_expression, expresion_stmt, selection_stmt, iteration_stmt, return_stmt;
@@ -94,7 +93,6 @@ program1            ::=expresion:e
 
 program             ::= declaration_list:dl
                      {: RESULT = dl; :}
-                    | ERROR
                     ;
 
 type_specifier      ::= INT:i
@@ -123,31 +121,51 @@ declaration         ::= variable_declaration:v
 
 function_declaration :: type_specifier:t ID:i LPAREN params:p RPAREN compound_statement:c 
                      {: RESULT = new FunctionDec(tleft, t, i, p, c); :}
-
                     ;
 
 variable_declaration ::= type_specifier:t ID:i SEMI
-                     {: RESULT = new SimpDec(tleft, t, i); if (t.)}
+                     {: RESULT = new SimpDec(tleft, t, i); :}
 
-                    | type_specifier ID LSB NUM RSB SEMI
-                     {: RESULT = new ArrayDec(ileft)}
+                    | type_specifier:t ID:i LSB NUM:n RSB SEMI
+                     {: RESULT = new ArrayDec(tleft, t, i, new IntExp(nleft, n)); :}
                     ;
 
 
-local_declarations  ::= local_declarations var_declaration
-                    |
+local_declarations  ::= local_declarations:lds var_declaration:vd
+                     {: VarDecList v = lds;
+                        while(v.tail != null)
+                           v = v.tail;
+                        v.tail = new VarDecList(vd, null);
+                        RESULT = lds;
+                      :}
+                    | var_declaration:vd2
+                     {: RESULT = new VarDecList(vd2, null); :}
                     ;
 
-compound_statement  ::= LBRACE local_declarations statement_list RBRACE
+compound_statement  ::= LBRACE:l local_declarations:ld statement_list:sl RBRACE
+                     {: RESULT = new CompoundExp(lleft, ld, sl); :}
+                    | LBRACE:l2 local_declarations:ld RBRACE
+                     {: RESULT = new CompoundExp(l2left, ld, null); :}
+                    | LBRACE:l3 statement_list:sl2 RBRACE
+                     {: RESULT = new CompoundExp(l3left, null, sl2); :}
+                    | LBRACE:l4 RBRACE
+                     {: RESULT = new CompoundExp(l4left, null, null); :}
                     ;
 
-statement_list      ::= statement_list statement
+statement_list      ::= statement_list:sl statement:s
+                     {: ExpList v = sl; 
+                        while (v.tail != null)
+                           v = v.tail;
+                        v.tail = new ExpList(s, null);
+                        RESULT = sl;
+                     :}
                     |
                     ;
 
 param               ::= type_specifier:t ID:i
                      {: RESULT = new SimpDec(tleft, t, i);}
-                    | type_specifier ID LSB RSB
+                    | type_specifier:t ID:i LSB RSB
+                     {: RESULT = new SimpDec(tleft, t, i); :}
                     ;
 
 param_list          ::= param_list:p1 COMMA params:p2
@@ -179,9 +197,9 @@ expression_stmt      ::= expresion:e SEMI
                     ;
 
 selection_stmt      ::= IF RPAREN expression:e LPAREN statement:s1
-                     {: RESULT = new IfExp(eleft, e, s1, null); :}
+                     {: RESULT = new IfExp(eleft, eright, e, s1, null); :}
                     | IF RPAREN expression:e LPAREN statement:s ELSE statement:s
-                     {: RESULT = new IfExp(eleft, e, s1, s2); :}
+                     {: RESULT = new IfExp(eleft, eright, e, s1, s2); :}
                     ;
 
 iteration_stmt      ::= WHILE LPAREN expression:e RPAREN statement:s
@@ -195,13 +213,13 @@ return_stmt         ::= RETURN:r expression:e SEMI
                     ;
 
 expression          ::= var_declaration:v ASSIGN expression:e
-                     {: RESULT = new AssignExp(vleft, new VarExp(vleft, v), e); :}
+                     {: RESULT = new AssignExp(vleft, vright, new VarExp(vleft, vright, v), e); :}
                     | simple_expression
                     ;
 
 
 simple_expression   ::= additive_expression:ae1 relop:o additive_expression:ae2
-                     {: RESULT = new OpExp(ae1left, ae1, o, ae2); :}
+                     {: RESULT = new OpExp(ae1left, ae1right, ae1, o, ae2); :}
                     | additive_expression:ae
                      {: RESULT = ae; :}
                     ;
@@ -221,7 +239,7 @@ relop               ::= LTEQ:i
                     ;
 
 additive_expression ::= additive_expression:ae addop:o term:t
-                     {: RESULT = new OpExp(aeleft, ae, o, t); :}
+                     {: RESULT = new OpExp(aeleft, aeright, ae, o, t); :}
                     | term:t
                      {: RESULT = t; :}
                     ;
@@ -233,7 +251,7 @@ addop               ::= PLUS:p
                     ;
 
 term                ::= term:t mulop:o factor:f
-                     {: RESULT = new OpExp(tleft, t, o, f); :}
+                     {: RESULT = new OpExp(tleft, tright, t, o, f); :}
                     | factor:f
                      {: RESULT = f; :}
                     ;
@@ -247,11 +265,11 @@ mulop               ::= TIMES:i
 factor              ::= LPAREN expression:ex RPAREN
                      {: RESULT = ex; :}
                     | variable_declaration:vd
-                     {: RESULT = new VarExp(vdleft, vd); :}
+                     {: RESULT = new VarExp(vdleft, vdright, vd); :}
                     | call: c
                      {: RESULT = c; :}
                     | NUM:n
-                     {: RESULT = new IntExp(nleft, n); :}
+                     {: RESULT = new IntExp(nleft, nright, n); :}
                     ;
 
 call                ::= ID:i LPAREN args:a RPAREN

@@ -5,9 +5,8 @@ public class IfExp extends Exp {
   public ExpList thenpart;
   public ExpList elsepart;
 
-  public IfExp( int row, int col, Exp test, ExpList thenpart, ExpList elsepart ) {
-    this.row = row;
-    this.col = col;
+  public IfExp( int position, Exp test, ExpList thenpart, ExpList elsepart ) {
+    this.position = position;
     this.test = test;
     this.thenpart = thenpart;
     this.elsepart = elsepart;
