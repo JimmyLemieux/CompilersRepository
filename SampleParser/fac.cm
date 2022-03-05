@@ -3,8 +3,9 @@
 void main(void) {
   int x; 
   int fac;
+  int a[100];
+  a[2] = 4;
   x = input();
-  fac = 1;
 
   while (x > 1) {
     fac = fac * x;

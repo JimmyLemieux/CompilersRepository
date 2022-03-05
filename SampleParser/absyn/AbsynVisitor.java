@@ -43,4 +43,14 @@ public interface AbsynVisitor {
   public void visit (WriteExp exp, int level);
 
   public void visit (RepeatExp exp, int level);
+
+  public void visit (DecList exp, int level);
+
+  public void visit (SimpleVar var, int level);
+
+  public void visit (VarAssignExp varAssign, int level);
+
+  public void visit (SimpleVarExp var, int level);
+
+  public void visit (SimpleIndexVar var, int level);
 }

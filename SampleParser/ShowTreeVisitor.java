@@ -62,8 +62,6 @@ public class ShowTreeVisitor implements AbsynVisitor {
         break;
       case OpExp.GT:
         System.out.println( " > " );
-      case OpExp.GE:
-        System.out.println(" >= ");
       case OpExp.MUL:
         System.out.println(" * ");
         break;
@@ -100,6 +98,33 @@ public class ShowTreeVisitor implements AbsynVisitor {
     exp.output.accept( this, ++level );
   }
   
+  public void visit( DecList decList, int level ) {
+    while( decList != null ) {
+        decList.head.accept( this, level );
+        decList = decList.tail;
+    }
+  }
+
+  public void visit( SimpleVar var, int level ) {
+    indent( level );
+    System.out.println(" Simple Variable: " + var.varName);
+  }
+
+  public void visit( VarAssignExp varAssign, int level) {
+    indent( level );
+    System.out.println( "VarAssignExp:" );
+    level++;
+    varAssign.lhs.accept( this, level );
+    varAssign.rhs.accept( this, level );
+  }
+
+  public void visit(SimpleIndexVar var, int level) {
+    indent( level );
+    System.out.println("Simple Index Var:" + var.varName);
+    level++;
+    var.exp.accept(this, level);
+  }
+
   // TODO: Fill these out here!
   public void visit(ErrorDec exp, int level) {
 
@@ -207,5 +232,12 @@ public class ShowTreeVisitor implements AbsynVisitor {
     level++;
     exp.test.accept(this, level);
     exp.exps.accept(this, level);
+  }
+
+  public void visit(SimpleVarExp exp, int level) {
+    indent(level);
+    System.out.println(" SimpleVarExp: ");
+    level++;
+    exp.var.accept(this, level);
   }
 }
