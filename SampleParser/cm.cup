@@ -152,6 +152,8 @@ variable_declaration ::= type_specifier:t ID:i SEMI
                         RESULT = new ArrayDec(ileft, null, i, null);
                      :}
                     | ID:i LSB RSB SEMI
+                    | type_specifier:t ID:i ASSIGN factor:f SEMI
+                     {: RESULT = new VarDecExp(tleft, tright, t, i, f); :}
                     ;
 
 
