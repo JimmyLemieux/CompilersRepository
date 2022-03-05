@@ -1,0 +1,34 @@
+/* Expectation*/
+/* Invalid parameter on line 14
+   Error will print stating "Error : Invalid type"
+   Tree will not display TypeExp as "Error unrecognized type"
+
+   Invalid parameter on line 16
+   Error will print stating "Error : Invalid parameter list"
+   Tree will not display the parameter list for the function
+
+   Invalid parameter on line 18
+   Error will print stating "Error : Invalid symbol found line:8 column:10"
+   Tree will not display OpExp as "Unrecognized symbol found"
+ */
+
+z[1];
+
+int main(){
+    j = j + 0;
+    k = 1 & 2;
+}
+
+/* Our Results: Everything is good just our output for line 15 which is this Error in line 15, column 2 : Syntax error
+instead expected token classes are [] could be changed to Invalid type
+
+Error in line 15, column 2 : Syntax error
+instead expected token classes are []
+Error : Incorrect structure in the declaration_list.
+Error in line 17, column 10 : Syntax error
+instead expected token classes are [error, VOID, INT]
+Error : Incorrect structure in param_list
+Error in line 19, column 11 : Syntax error
+instead expected token classes are [EQ, NOTEQ, LT, GT, GTEQ, LTEQ, PLUS, MINUS, TIMES, OVER, SEMI]
+Error : Couldn't repair and continue parse
+*/

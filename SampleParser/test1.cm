@@ -1,0 +1,18 @@
+/* This file has no errors */
+
+int hello;
+void a[8];
+
+int main(void test){
+    int z;
+    j = j + 0;
+    while(z = 1) {
+      z * 1;
+    }
+    if(j = 2) {
+      j = j / 1;
+    }
+    input();
+}
+
+/* OUR RESULTS : EVERYTHING IS SPOT ON*/

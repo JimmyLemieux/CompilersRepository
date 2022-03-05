@@ -1,0 +1,30 @@
+/* Invalid type on line 14
+   Error will print stating "Error : Invalid Type"
+   Tree will display TypeExp as "Error unrecognized type"
+
+   Invalid factor on line 17
+   Error will print stating "Error : parameter list"
+   Tree will display nothing for ParamsExp under the function call
+
+   Invalid factor on line 19
+   Error will print stating "Error : Invalid factor"
+   Tree will display Expression as "Error missing values"
+ */
+
+string hello; /* there is an issue when string is declared so we will have to just report Invalid Type*/
+void a[8];
+
+int main( ,void test){
+    j = j + 0;
+    t=t*();
+}
+
+/* Our results Error in line 14, column 8 : Syntax error
+instead expected token classes are []
+Error : Incorrect structure in the declaration_list.
+java.lang.NullPointerException
+        at parser$CUP$parser$actions.CUP$parser$do_action_part00000000(parser.java:491)
+        at parser$CUP$parser$actions.CUP$parser$do_action(parser.java:1528)
+        at parser.do_action(parser.java:340)
+        at java_cup.runtime.lr_parser.parse(lr_parser.java:699)
+        at Main.main(Main.java:23) */
