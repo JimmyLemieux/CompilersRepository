@@ -2,7 +2,7 @@ int main(){
     int k;
     int j;
     j = 0;
-    for(k = 1;k <4; k++) {
+    while(j < 5) {
       j = k+1;
     }
 }

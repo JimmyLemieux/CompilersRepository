@@ -14,7 +14,7 @@
 
 int a[];
 
-int main( void test){
+int main( void test, void cool){
     while(){
         t=1+1;
     }

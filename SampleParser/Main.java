@@ -24,7 +24,8 @@ class Main {
       if (SHOW_TREE) {
          System.out.println("The abstract syntax tree is:");
          ShowTreeVisitor visitor = new ShowTreeVisitor();
-         result.accept(visitor, 0); 
+         if (result != null)
+          result.accept(visitor, 0); 
       }
     } catch (Exception e) {
       /* do cleanup here -- possibly rethrow e */

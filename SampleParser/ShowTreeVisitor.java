@@ -27,7 +27,11 @@ public class ShowTreeVisitor implements AbsynVisitor {
     indent( level );
     System.out.println( "IfExp:" );
     level++;
-    exp.test.accept( this, level );
+    if (exp.test != null) {
+      exp.test.accept( this, level );
+    } else {
+      System.out.println("No expression given for if condition!");
+    }
     exp.thenpart.accept( this, level );
     if (exp.elsepart != null )
        exp.elsepart.accept( this, level );
@@ -100,8 +104,12 @@ public class ShowTreeVisitor implements AbsynVisitor {
   
   public void visit( DecList decList, int level ) {
     while( decList != null ) {
+      if (decList.head != null) {
         decList.head.accept( this, level );
-        decList = decList.tail;
+      } else {
+        System.out.println("Error in the decList");
+      }
+      decList = decList.tail;
     }
   }
 
@@ -144,10 +152,14 @@ public class ShowTreeVisitor implements AbsynVisitor {
     if (exp.arraySize != null)
         System.out.print("" + exp.arraySize.value);
     System.out.print("] - ");
-    if (exp.type.type == 0)
-        System.out.println("VOID");
-    else if (exp.type.type == 1) // is this necessary? a "void" array?
-        System.out.println("INT");
+    if (exp.type != null) {
+      if (exp.type.type == 0)
+          System.out.println("VOID");
+      else if (exp.type.type == 1)
+          System.out.println("INT");
+    } else {
+      System.out.println("Symbol not found!");
+    }
   }
 
   public void visit(CallingExp exp, int level) {
@@ -230,7 +242,11 @@ public class ShowTreeVisitor implements AbsynVisitor {
     indent (level);
     System.out.println( "WhileExp: ");
     level++;
-    exp.test.accept(this, level);
+    if (exp.test != null)
+      exp.test.accept(this, level);
+    else {
+      System.out.println("No expression given for while condition!");
+    }
     exp.exps.accept(this, level);
   }
 

@@ -79,7 +79,7 @@ non terminal TypeName type_specifier;
 non terminal DecList program, declaration_list;
 non terminal VarDecList param_list, local_declarations;
 non terminal ExpList statement_list, args, arg_list;
-non terminal Integer relop, addop, mulop;
+non terminal Integer addop, mulop;
 non terminal Var var;
 
 /*precedence*/
@@ -94,6 +94,8 @@ start with program;
 
 program             ::= declaration_list:dl
                      {: RESULT = dl; :}
+                     | error:ee
+                        {:parser.report_error("Invalid file definition", ee); :}
                     ;
 
 type_specifier      ::= INT:i
@@ -112,8 +114,14 @@ declaration_list    ::= declaration_list:d1 declaration:d2
                      :}
                     | declaration:d
                      {: RESULT = new DecList(d, null); :}
+                    | COMMA declaration:d3
+                     {: parser.report_error("Invalid decleration list comman seperation", d3);
+                        RESULT = new DecList(d3, null);
+                     :}
                     | error:e
                      {: parser.report_error("Incorrect structure in the declaration_list.", e);
+                        RESULT = new DecList(null, null);
+
                      :}
                     ;
 
@@ -127,8 +135,8 @@ function_declaration ::= type_specifier:t ID:i LPAREN param_list:p RPAREN compou
                      {: RESULT = new FunctionDec(tleft, t, i, p, c); :}
                      | type_specifier:t2 ID:i2 LPAREN VOID RPAREN compound_statement:c2
                      {: RESULT = new FunctionDec(t2left, t2, i2, null, c2); :}
-                     | ID:i3 LPAREN RPAREN compound_statement:c3
-                     {: RESULT = new FunctionDec(i3left, null, i3, null, c3); :}
+                     | type_specifier:t2 ID:i3 LPAREN RPAREN compound_statement:c3
+                     {: RESULT = new FunctionDec(i3left, t2, i3, null, c3); :}
                     ;
 
 variable_declaration ::= type_specifier:t ID:i SEMI
@@ -136,6 +144,14 @@ variable_declaration ::= type_specifier:t ID:i SEMI
 
                     | type_specifier:t ID:i LSB NUM:n RSB SEMI
                      {: RESULT = new ArrayDec(tleft, t, i, new IntExp(nleft, n)); :}
+                    | type_specifier:t ID:i LSB RSB SEMI
+                     {: parser.report_error("Invalid array index value", i);
+                     RESULT = new ArrayDec(tleft, t, i, null); :}
+                    | ID:i LSB NUM:n RSB SEMI
+                     {: parser.report_error("Invalid array decleration", i);
+                        RESULT = new ArrayDec(ileft, null, i, null);
+                     :}
+                    | ID:i LSB RSB SEMI
                     ;
 
 
@@ -190,6 +206,10 @@ param_list          ::= param_list:p1 COMMA param:p2
                      :}
                     | param:p1
                      {: RESULT = new VarDecList(p1, null); :}
+                    | COMMA param:p3
+                     {:parser.report_error("Invalid param list in function", p3);
+                        RESULT = new VarDecList(p3, null);
+                     :}
                     | error:e
                      {:
                         parser.report_error("Incorrect structure in param_list", e);
@@ -214,10 +234,18 @@ selection_stmt      ::= IF LPAREN expression:e RPAREN statement:s1
                      {: RESULT = new IfExp(eleft, eright, e, s1, null); :}
                     | IF LPAREN expression:e RPAREN statement:s2 ELSE statement:s3
                      {: RESULT = new IfExp(eleft, eright, e, s2, s3); :}
+                    | IF:i LPAREN RPAREN statement:s1
+                     {: parser.report_error("Invalid If condition", i); 
+                        RESULT = new IfExp(ileft, iright, null, s1, null);
+                     :}
                     ;
 
 iteration_stmt      ::= WHILE:w LPAREN expression:e RPAREN statement:s
                      {: RESULT = new WhileExp(wleft, e, s); :}
+                     | WHILE:w LPAREN RPAREN statement:s
+                     {: parser.report_error("Invalid While condition", w); 
+                        RESULT = new WhileExp(wleft, null, s);
+                     :}
                     ;
 
 return_stmt         ::= RETURN:r expression:e SEMI
@@ -252,23 +280,12 @@ expression          ::= variable_declaration:v ASSIGN expression:e
                      {: RESULT = new OpExp(aa1left, aa1, OpExp.EQ, aa2); :}
                     | expression:aa1 NOTEQ expression:aa2
                      {: RESULT = new OpExp(aa1left, aa1, OpExp.NOTEQ, aa2); :}
+                    | expression:aa1 ERROR:e expression:aa2
+                     {: parser.report_error("Invalid symbol in expression", e);
+                        RESULT = new OpExp(aa1left, aa1, OpExp.ERROR, aa2);
+                     :}
                     | factor:f
                      {: RESULT = f; :}
-                    ;
-
-relop               ::= LTEQ:i
-                     {: RESULT = OpExp.LTEQ; :}
-                    | LT:i
-                     {: RESULT = OpExp.LT; :} 
-                    | GTEQ:i
-                     {: RESULT = OpExp.GTEQ; :}
-                    | EQ:i
-                     {: RESULT = OpExp.EQ; :}
-                    | NOTEQ:i
-                     {: RESULT = OpExp.NOTEQ; :}
-                    | GT:i
-                     {: RESULT = OpExp.GT; :}
-                    |
                     ;
 
 addop               ::= PLUS:p
@@ -277,16 +294,12 @@ addop               ::= PLUS:p
                      {: RESULT = OpExp.MINUS; :}
                     ;
 
-term                ::= term:t mulop:o factor:f
-                     {: RESULT = new OpExp(tleft, t, o, f); :}
+term                ::= term:t TIMES:i factor:f
+                     {: RESULT = new OpExp(tleft, t, OpExp.MUL, f); :}
+                    | term:t OVER:i factor:f
+                     {: RESULT = new OpExp(tleft, t, OpExp.OVER, f); :}
                     | factor:f
                      {: RESULT = f; :}
-                    ;
-
-mulop               ::= TIMES:i
-                     {: RESULT = OpExp.MUL; :}
-                    | OVER:o
-                     {: RESULT = OpExp.OVER; :}
                     ;
 
 var                 ::= ID:i
@@ -309,6 +322,10 @@ call                ::= ID:i LPAREN arg_list:a RPAREN
                      {: RESULT = new CallingExp(ileft, i, a); :}
                      | ID: i1 LPAREN RPAREN
                      {: RESULT = new CallingExp(i1left, i1, null); :}
+                     | LPAREN:i RPAREN
+                        {:parser.report_error("No calling function Id", null);
+                           RESULT = new CallingExp(ileft, null, null);
+                        :}
                     ;
 
 arg_list            ::= arg_list:ex1 COMMA expression:ex2
