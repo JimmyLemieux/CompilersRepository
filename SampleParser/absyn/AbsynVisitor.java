@@ -32,11 +32,7 @@ public interface AbsynVisitor {
 
   public void visit( ArrayDec exp, int level );
 
-  public void visit (ReadExp exp, int level);
-
   public void visit (WriteExp exp, int level);
-
-  public void visit (RepeatExp exp, int level);
 
   public void visit (DeclarationList exp, int level);
 

@@ -1,5 +1,5 @@
 /*
-  Created By: Mustafa Al-Obaidi
+  Created By: Mustafa Al-Obaidi, James Lemieux
   Code Inspired by: Fei Song
   File Name: cm.flex
   To Build: jflex cm.flex
