@@ -95,7 +95,9 @@ start with program;
 program             ::= declaration_list:dl
                      {: RESULT = dl; :}
                      | error:ee
-                        {:parser.report_error("Invalid file definition", ee); :}
+                        {:parser.report_error("Invalid file definition", ee); 
+                          RESULT = new DeclarationList(eeleft, eeright, null, null);
+                        :}
                     ;
 
 type_specifier      ::= INT:i

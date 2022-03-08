@@ -265,7 +265,7 @@ public class ShowTreeVisitor implements AbsynVisitor {
   public void visit(VarDecExp vExp, int level) {
     indent(level);
     level++;
-    System.out.print( "VarDeclaratonExp: " + vExp.varName + " - ");
+    System.out.print( "VariableDeclaratonExp: " + vExp.varName + " - ");
     vExp.name.accept(this, level);
     vExp.exp.accept(this, level);
 
