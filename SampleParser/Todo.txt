@@ -1,0 +1,2 @@
+1- get red of all the compiler warnings
+2- delete all the extra files.
