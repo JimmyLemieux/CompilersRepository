@@ -1,5 +1,5 @@
 package absyn;
 
-abstract public class VarDec extends Dec {
+abstract public class VarDec extends Declaration {
 
 }

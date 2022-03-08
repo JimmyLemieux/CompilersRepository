@@ -73,10 +73,10 @@ terminal ERROR;
 non terminal VarDec params, param, variable_declaration;
 non terminal Exp statement, expression, simple_expression, expression_stmt, selection_stmt, iteration_stmt, return_stmt, additive_expression, term, factor, call;
 non terminal CompoundExp compound_statement;
-non terminal Dec declaration, function_declaration;
+non terminal Declaration declaration, function_declaration;
 non terminal Exp program1;
 non terminal TypeName type_specifier;
-non terminal DecList program, declaration_list;
+non terminal DeclarationList program, declaration_list;
 non terminal VarDecList param_list, local_declarations;
 non terminal ExpList statement_list, args, arg_list;
 non terminal Integer addop, mulop;
@@ -99,28 +99,28 @@ program             ::= declaration_list:dl
                     ;
 
 type_specifier      ::= INT:i
-                     {: RESULT = new TypeName(ileft, TypeName.INT); :}
+                     {: RESULT = new TypeName(ileft, iright, TypeName.INT); :}
                     | VOID:v
-                     {: RESULT = new TypeName(vleft, TypeName.VOID); :}
+                     {: RESULT = new TypeName(vleft, vright, TypeName.VOID); :}
                     ;
 
 declaration_list    ::= declaration_list:d1 declaration:d2
                      {: 
-                        DecList t = d1;
+                        DeclarationList t = d1;
                         while( t.tail != null)
                            t = t.tail;
-                        t.tail = new DecList(d2, null);
+                        t.tail = new DeclarationList(d2, null);
                         RESULT = d1;
                      :}
                     | declaration:d
-                     {: RESULT = new DecList(d, null); :}
+                     {: RESULT = new DeclarationList(d, null); :}
                     | COMMA declaration:d3
                      {: parser.report_error("Invalid decleration list comman seperation", d3);
-                        RESULT = new DecList(d3, null);
+                        RESULT = new DeclarationList(d3, null);
                      :}
                     | error:e
                      {: parser.report_error("Incorrect structure in the declaration_list.", e);
-                        RESULT = new DecList(null, null);
+                        RESULT = new DeclarationList(null, null);
 
                      :}
                     ;
@@ -132,30 +132,27 @@ declaration         ::= variable_declaration:v
                     ;
 
 function_declaration ::= type_specifier:t ID:i LPAREN param_list:p RPAREN compound_statement:c 
-                     {: RESULT = new FunctionDec(tleft, t, i, p, c); :}
+                     {: RESULT = new FunctionDec(tleft, tright, t, i, p, c); :}
                      | type_specifier:t2 ID:i2 LPAREN VOID RPAREN compound_statement:c2
-                     {: RESULT = new FunctionDec(t2left, t2, i2, null, c2); :}
+                     {: RESULT = new FunctionDec(t2left, t2right, t2, i2, null, c2); :}
                      | type_specifier:t2 ID:i3 LPAREN RPAREN compound_statement:c3
-                     {: RESULT = new FunctionDec(i3left, t2, i3, null, c3); :}
+                     {: RESULT = new FunctionDec(i3left, i3right, t2, i3, null, c3); :}
                     ;
 
 variable_declaration ::= type_specifier:t ID:i SEMI
-                     {: RESULT = new SimpDec(tleft, t, i); :}
+                     {: RESULT = new VariableDeclaration(tleft, tright, t, i); :}
 
                     | type_specifier:t ID:i LSB NUM:n RSB SEMI
-                     {: RESULT = new ArrayDec(tleft, t, i, new IntExp(nleft, n)); :}
+                     {: RESULT = new ArrayDec(tleft, tright, t, i, new IntExp(nleft, nright, n)); :}
                     | type_specifier:t ID:i LSB RSB SEMI
                      {: parser.report_error("Invalid array index value", i);
-                     RESULT = new ArrayDec(tleft, t, i, null); :}
+                     RESULT = new ArrayDec(tleft, tright, t, i, null); :}
                     | ID:i LSB NUM:n RSB SEMI
                      {: parser.report_error("Invalid array decleration", i);
-                        RESULT = new ArrayDec(ileft, null, i, null);
+                        RESULT = new ArrayDec(ileft, iright, null, i, null);
                      :}
                     | ID:i LSB RSB SEMI
-                    | type_specifier:t ID:i ASSIGN factor:f SEMI
-                     {: RESULT = new VarDecExp(tleft, tright, t, i, f); :}
                     ;
-
 
 local_declarations  ::= local_declarations:lds variable_declaration:vd
                      {: VarDecList v = lds;
@@ -173,13 +170,13 @@ local_declarations  ::= local_declarations:lds variable_declaration:vd
                     ;
 
 compound_statement  ::= LCB:l local_declarations:ld statement_list:sl RCB
-                     {: RESULT = new CompoundExp(lleft, ld, sl); :}
+                     {: RESULT = new CompoundExp(lleft, lright, ld, sl); :}
                     | LCB:l2 local_declarations:ld RCB
-                     {: RESULT = new CompoundExp(l2left, ld, null); :}
+                     {: RESULT = new CompoundExp(l2left, l2right, ld, null); :}
                     | LCB:l3 statement_list:sl2 RCB
-                     {: RESULT = new CompoundExp(l3left, null, sl2); :}
+                     {: RESULT = new CompoundExp(l3left, l3right, null, sl2); :}
                     | LCB:l4 RCB
-                     {: RESULT = new CompoundExp(l4left, null, null); :}
+                     {: RESULT = new CompoundExp(l4left, l4right, null, null); :}
                     ;
 
 statement_list      ::= statement_list:sl statement:s
@@ -194,9 +191,9 @@ statement_list      ::= statement_list:sl statement:s
                     ;
 
 param               ::= type_specifier:t ID:i
-                     {: RESULT = new SimpDec(tleft, t, i); :}
+                     {: RESULT = new VariableDeclaration(tleft, tright, t, i); :}
                     | type_specifier:t ID:i LSB RSB
-                     {: RESULT = new SimpDec(tleft, t, i); :}
+                     {: RESULT = new VariableDeclaration(tleft, tright, t, i); :}
                     ;
 
 param_list          ::= param_list:p1 COMMA param:p2
@@ -215,7 +212,7 @@ param_list          ::= param_list:p1 COMMA param:p2
                     | error:e
                      {:
                         parser.report_error("Incorrect structure in param_list", e);
-                        RESULT = new VarDecList(new ErrorVarDec(eleft), null);
+                        RESULT = new VarDecList(null, null);
                      :}
                     ;
 
@@ -243,17 +240,17 @@ selection_stmt      ::= IF LPAREN expression:e RPAREN statement:s1
                     ;
 
 iteration_stmt      ::= WHILE:w LPAREN expression:e RPAREN statement:s
-                     {: RESULT = new WhileExp(wleft, e, s); :}
+                     {: RESULT = new WhileExp(wleft, wright, e, s); :}
                      | WHILE:w LPAREN RPAREN statement:s
                      {: parser.report_error("Invalid While condition", w); 
-                        RESULT = new WhileExp(wleft, null, s);
+                        RESULT = new WhileExp(wleft, wright, null, s);
                      :}
                     ;
 
 return_stmt         ::= RETURN:r expression:e SEMI
-                     {: RESULT = new ReturnExp(rleft, e); :}
+                     {: RESULT = new ReturnExp(rleft, rright, e); :}
                     | RETURN:r SEMI
-                     {: RESULT = new ReturnExp(rleft, null); :}
+                     {: RESULT = new ReturnExp(rleft, rright, null); :}
                     ;
 
 expression          ::= variable_declaration:v ASSIGN expression:e
@@ -261,30 +258,30 @@ expression          ::= variable_declaration:v ASSIGN expression:e
                     | var:v ASSIGN call:c
                      {: RESULT = new VarAssignExp(vleft, vright, v, c); :}
                     | expression:aa1 LT expression:aa2
-                     {: RESULT = new OpExp(aa1left, aa1, OpExp.LT, aa2); :}
+                     {: RESULT = new OpExp(aa1left, aa1right, aa1, OpExp.LT, aa2); :}
                     | var:v ASSIGN expression:aa2
                      {: RESULT = new VarAssignExp(vleft, vright, v, aa2); :} 
                     | expression:aa1 LTEQ expression:aa2
-                     {: RESULT = new OpExp(aa1left, aa1, OpExp.LTEQ, aa2); :}
+                     {: RESULT = new OpExp(aa1left, aa1right, aa1, OpExp.LTEQ, aa2); :}
                     | expression:aa1 GT expression:aa2
-                     {: RESULT = new OpExp(aa1left, aa1, OpExp.GT, aa2); :}
+                     {: RESULT = new OpExp(aa1left, aa1right, aa1, OpExp.GT, aa2); :}
                     | expression:aa1 GTEQ expression:aa2
-                     {: RESULT = new OpExp(aa1left, aa1, OpExp.GTEQ, aa2); :}
+                     {: RESULT = new OpExp(aa1left, aa1right, aa1, OpExp.GTEQ, aa2); :}
                     | expression:aa1 PLUS expression:aa2
-                     {: RESULT = new OpExp(aa1left, aa1, OpExp.PLUS, aa2); :}
+                     {: RESULT = new OpExp(aa1left, aa1right, aa1, OpExp.PLUS, aa2); :}
                     | expression:aa1 MINUS expression:aa2
-                     {: RESULT = new OpExp(aa1left, aa1, OpExp.MINUS, aa2); :}
+                     {: RESULT = new OpExp(aa1left, aa1right, aa1, OpExp.MINUS, aa2); :}
                     | expression:aa1 TIMES expression:aa2
-                     {: RESULT = new OpExp(aa1left, aa1, OpExp.TIMES, aa2); :}
+                     {: RESULT = new OpExp(aa1left, aa1right, aa1, OpExp.TIMES, aa2); :}
                     | expression:aa1 OVER expression:aa2
-                     {: RESULT = new OpExp(aa1left, aa1, OpExp.OVER, aa2); :}
+                     {: RESULT = new OpExp(aa1left, aa1right, aa1, OpExp.OVER, aa2); :}
                     | expression:aa1 EQ expression:aa2
-                     {: RESULT = new OpExp(aa1left, aa1, OpExp.EQ, aa2); :}
+                     {: RESULT = new OpExp(aa1left, aa1right, aa1, OpExp.EQ, aa2); :}
                     | expression:aa1 NOTEQ expression:aa2
-                     {: RESULT = new OpExp(aa1left, aa1, OpExp.NOTEQ, aa2); :}
+                     {: RESULT = new OpExp(aa1left, aa1right, aa1, OpExp.NOTEQ, aa2); :}
                     | expression:aa1 ERROR:e expression:aa2
                      {: parser.report_error("Invalid symbol in expression", e);
-                        RESULT = new OpExp(aa1left, aa1, OpExp.ERROR, aa2);
+                        RESULT = new OpExp(aa1left, aa1right, aa1, OpExp.ERROR, aa2);
                      :}
                     | factor:f
                      {: RESULT = f; :}
@@ -297,9 +294,9 @@ addop               ::= PLUS:p
                     ;
 
 term                ::= term:t TIMES:i factor:f
-                     {: RESULT = new OpExp(tleft, t, OpExp.MUL, f); :}
+                     {: RESULT = new OpExp(tleft, tright, t, OpExp.MUL, f); :}
                     | term:t OVER:i factor:f
-                     {: RESULT = new OpExp(tleft, t, OpExp.OVER, f); :}
+                     {: RESULT = new OpExp(tleft, tright, t, OpExp.OVER, f); :}
                     | factor:f
                      {: RESULT = f; :}
                     ;
@@ -317,16 +314,16 @@ factor              ::= LPAREN expression:ex RPAREN
                     | var:v
                      {: RESULT = new SimpleVarExp(vleft, vright, v); :}
                     | NUM:n
-                     {: RESULT = new IntExp(nleft, n); :}
+                     {: RESULT = new IntExp(nleft, nright, n); :}
                     ;
 
 call                ::= ID:i LPAREN arg_list:a RPAREN
-                     {: RESULT = new CallingExp(ileft, i, a); :}
+                     {: RESULT = new CallingExp(ileft, iright, i, a); :}
                      | ID: i1 LPAREN RPAREN
-                     {: RESULT = new CallingExp(i1left, i1, null); :}
+                     {: RESULT = new CallingExp(i1left, i1right, i1, null); :}
                      | LPAREN:i RPAREN
-                        {:parser.report_error("No calling function Id", null);
-                           RESULT = new CallingExp(ileft, null, null);
+                        {:parser.report_error("No calling function Id", i);
+                           RESULT = new CallingExp(ileft, iright, null, null);
                         :}
                     ;
 
@@ -341,6 +338,6 @@ arg_list            ::= arg_list:ex1 COMMA expression:ex2
                      {: RESULT = new ExpList(e, null); :}
                     | error:ee
                      {: parser.report_error("Incorrect comma spaced delimeters", ee);
-                        RESULT = new ExpList(new ErrorExp(eeleft), null);
+                        RESULT = new ExpList(null, null);
                      :} 
                     ;

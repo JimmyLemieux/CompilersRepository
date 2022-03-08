@@ -1,6 +1,6 @@
 package absyn;
 
-public class VarDecExp extends VarDec {
+public class VarDecExp extends Declaration {
 
     public TypeName name;
     public String varName;

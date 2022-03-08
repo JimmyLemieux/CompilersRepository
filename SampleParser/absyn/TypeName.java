@@ -5,11 +5,13 @@ public class TypeName {
     public final static int INT = 1;
     public final static int ERROR = 2;
     public int type;
-    public int typePos;
+    public int row;
+    public int col;
 
-    public TypeName(int typePos, int type)
+    public TypeName(int row, int col, int type)
     {
-        this.typePos = typePos;
+        this.row = row;
+        this.col = col;
         this.type = type;
     }
     public void accept( AbsynVisitor visitor, int level ) 

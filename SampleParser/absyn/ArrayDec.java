@@ -4,9 +4,12 @@ public class ArrayDec extends VarDec {
   public String arrayName;
   public TypeName type;
   public IntExp arraySize;
+  public int row;
+  public int col;
 
-  public ArrayDec( int position, TypeName type, String arrayName, IntExp arraySize) {
-    this.position = position;
+  public ArrayDec( int row, int col, TypeName type, String arrayName, IntExp arraySize) {
+    this.row = row;
+    this.col = col;
     this.type = type;
     this.arrayName = arrayName;
     this.arraySize = arraySize;

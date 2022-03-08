@@ -30,6 +30,7 @@ public class ShowTreeVisitor implements AbsynVisitor {
     if (exp.test != null) {
       exp.test.accept( this, level );
     } else {
+      indent(level);
       System.out.println("No expression given for if condition!");
     }
     exp.thenpart.accept( this, level );
@@ -70,6 +71,7 @@ public class ShowTreeVisitor implements AbsynVisitor {
         System.out.println(" * ");
         break;
       default:
+        indent(level);
         System.out.println( "Unrecognized operator at line " + exp.row + " and column " + exp.col);
     }
     level++;
@@ -102,11 +104,12 @@ public class ShowTreeVisitor implements AbsynVisitor {
     exp.output.accept( this, ++level );
   }
   
-  public void visit( DecList decList, int level ) {
+  public void visit( DeclarationList decList, int level ) {
     while( decList != null ) {
       if (decList.head != null) {
         decList.head.accept( this, level );
       } else {
+        indent(level);
         System.out.println("Error in the decList");
       }
       decList = decList.tail;
@@ -133,31 +136,18 @@ public class ShowTreeVisitor implements AbsynVisitor {
     var.exp.accept(this, level);
   }
 
-  // TODO: Fill these out here!
-  public void visit(ErrorDec exp, int level) {
-
-  }
-
-  public void visit(ErrorVarDec exp, int level) {
-
-  }
-
-  public void visit(ErrorExp exp, int level) {
-
-  }
-
   public void visit(ArrayDec exp, int level) {
     indent (level);
     System.out.print( "ArrayDec: " + exp.arrayName + "[");
     if (exp.arraySize != null)
-        System.out.print("" + exp.arraySize.value);
-    System.out.print("] - ");
+        System.out.print(exp.arraySize.value + "]: ");
     if (exp.type != null) {
       if (exp.type.type == 0)
-          System.out.println("VOID");
+          System.out.println("Void");
       else if (exp.type.type == 1)
-          System.out.println("INT");
+          System.out.println("Int");
     } else {
+      indent(level);
       System.out.println("Symbol not found!");
     }
   }
@@ -193,9 +183,9 @@ public class ShowTreeVisitor implements AbsynVisitor {
     indent (level);
     System.out.print( "FunctionDec: " + exp.funName + " - ");
     if (exp.type.type == 0)
-        System.out.println("VOID");
+        System.out.println("Void");
     else if (exp.type.type == 1)
-        System.out.println("INT");
+        System.out.println("Int");
     level++;
     VarDecList parms = exp.param;
     while (parms != null) {
@@ -213,22 +203,22 @@ public class ShowTreeVisitor implements AbsynVisitor {
         exp.expr.accept(this, level);
   }
 
-  public void visit(SimpDec exp, int level) {
+  public void visit(VariableDeclaration exp, int level) {
     indent (level);
-    System.out.print( "SimpDec: " + exp.sname + " - ");
+    System.out.print( "Variable Declaration: " + exp.sname + ": ");
     if (exp.type.type == 0)
-        System.out.println("VOID");
+        System.out.println("Void");
     else if (exp.type.type == 1)
-        System.out.println("INT");
+        System.out.println("Int");
   }
 
   public void visit(TypeName exp, int level) {
     indent (level);
     System.out.print( "TypeName: ");
     if (exp.type == 0)
-        System.out.println("VOID");
+        System.out.println("Void");
     else if (exp.type == 1)
-        System.out.println("INT");
+        System.out.println("Int");
   }
 
   public void visit(VarDecList expList, int level) {
@@ -245,6 +235,7 @@ public class ShowTreeVisitor implements AbsynVisitor {
     if (exp.test != null)
       exp.test.accept(this, level);
     else {
+      indent(level);
       System.out.println("No expression given for while condition!");
     }
     exp.exps.accept(this, level);

@@ -23,3 +23,6 @@ parser.java: cm.cup
 
 clean:
 	rm -f parser.java Lexer.java sym.java *.class absyn/*.class *~
+
+test:
+	java -classpath /usr/share/java/cup.jar:. Main test$n.cm -a
