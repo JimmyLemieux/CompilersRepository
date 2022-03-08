@@ -1,2 +1,6 @@
 1- get red of all the compiler warnings
-2- delete all the extra files.
+2- Write the README file
+    (make -> compile everything)
+    (make -> Lexer.java -> Compiles the Sanner)
+    (make -> parser.java -> Compiles the Parser)
+    (make test n=[number] -> runs the parser with test file)
