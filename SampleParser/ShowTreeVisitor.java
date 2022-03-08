@@ -10,7 +10,11 @@ public class ShowTreeVisitor implements AbsynVisitor {
 
   public void visit( ExpList expList, int level ) {
     while( expList != null ) {
-      expList.head.accept( this, level );
+      if (expList.head != null) {
+        expList.head.accept( this, level );
+      } else {
+        System.out.println("Error: Invalid Expression List. row: " + expList.row + " col: " + expList.col);
+      }
       expList = expList.tail;
     } 
   }
@@ -31,7 +35,7 @@ public class ShowTreeVisitor implements AbsynVisitor {
       exp.test.accept( this, level );
     } else {
       indent(level);
-      System.out.println("No expression given for if condition!");
+      System.out.println("Error: No expression given for if condition! row: " + exp.row + " col: " + exp.col);
     }
     exp.thenpart.accept( this, level );
     if (exp.elsepart != null )
@@ -67,12 +71,22 @@ public class ShowTreeVisitor implements AbsynVisitor {
         break;
       case OpExp.GT:
         System.out.println( " > " );
+        break;
       case OpExp.MUL:
         System.out.println(" * ");
         break;
+      case OpExp.LTEQ:
+        System.out.println(" <= ");
+        break;
+      case OpExp.NOTEQ:
+        System.out.println(" != ");
+        break;
+      case OpExp.GTEQ:
+        System.out.println(" >= ");
+        break;
       default:
         indent(level);
-        System.out.println( "Unrecognized operator at line " + exp.row + " and column " + exp.col);
+        System.out.println( "Error: Unrecognized operator at row: " + exp.row + " and col: " + exp.col);
     }
     level++;
     exp.left.accept( this, level );
@@ -110,7 +124,7 @@ public class ShowTreeVisitor implements AbsynVisitor {
         decList.head.accept( this, level );
       } else {
         indent(level);
-        System.out.println("Error in the decList");
+        System.out.println("Error: Invalid Declaration List. row: " + decList.row + " col: " + decList.col);
       }
       decList = decList.tail;
     }
@@ -148,7 +162,7 @@ public class ShowTreeVisitor implements AbsynVisitor {
           System.out.println("Int");
     } else {
       indent(level);
-      System.out.println("Symbol not found!");
+      System.out.println("Error: Symbol not found! row: " + exp.row + " col: " + exp.col);
     }
   }
 
@@ -236,7 +250,7 @@ public class ShowTreeVisitor implements AbsynVisitor {
       exp.test.accept(this, level);
     else {
       indent(level);
-      System.out.println("No expression given for while condition!");
+      System.out.println("Error: No expression given for while condition! row: " + exp.row + " col: " + exp.col);
     }
     exp.exps.accept(this, level);
   }
@@ -251,7 +265,7 @@ public class ShowTreeVisitor implements AbsynVisitor {
   public void visit(VarDecExp vExp, int level) {
     indent(level);
     level++;
-    System.out.print( "VarDecExp: " + vExp.varName + " - ");
+    System.out.print( "VarDeclaratonExp: " + vExp.varName + " - ");
     vExp.name.accept(this, level);
     vExp.exp.accept(this, level);
 

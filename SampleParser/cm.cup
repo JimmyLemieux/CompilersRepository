@@ -109,18 +109,18 @@ declaration_list    ::= declaration_list:d1 declaration:d2
                         DeclarationList t = d1;
                         while( t.tail != null)
                            t = t.tail;
-                        t.tail = new DeclarationList(d2, null);
+                        t.tail = new DeclarationList(d2left, d2right, d2, null);
                         RESULT = d1;
                      :}
                     | declaration:d
-                     {: RESULT = new DeclarationList(d, null); :}
+                     {: RESULT = new DeclarationList(dleft, dright, d, null); :}
                     | COMMA declaration:d3
                      {: parser.report_error("Invalid decleration list comman seperation", d3);
-                        RESULT = new DeclarationList(d3, null);
+                        RESULT = new DeclarationList(d3left, d3right, d3, null);
                      :}
                     | error:e
                      {: parser.report_error("Incorrect structure in the declaration_list.", e);
-                        RESULT = new DeclarationList(null, null);
+                        RESULT = new DeclarationList(eleft, eright, null, null);
 
                      :}
                     ;
@@ -183,11 +183,11 @@ statement_list      ::= statement_list:sl statement:s
                      {: ExpList v = sl; 
                         while (v.tail != null)
                            v = v.tail;
-                        v.tail = new ExpList(s, null);
+                        v.tail = new ExpList(sleft, sright, s, null);
                         RESULT = sl;
                      :}
                     | statement:s
-                     {: RESULT = new ExpList(s, null); :}
+                     {: RESULT = new ExpList(sleft, sright, s, null); :}
                     ;
 
 param               ::= type_specifier:t ID:i
@@ -331,13 +331,13 @@ arg_list            ::= arg_list:ex1 COMMA expression:ex2
                      {: ExpList t = ex1;
                         while( t.tail != null)
                            t = t.tail;
-                        t.tail = new ExpList(ex2, null);
+                        t.tail = new ExpList(ex1left, ex1right, ex2, null);
                         RESULT = ex1;
                      :}
                     | expression:e
-                     {: RESULT = new ExpList(e, null); :}
+                     {: RESULT = new ExpList(eleft, eright, e, null); :}
                     | error:ee
                      {: parser.report_error("Incorrect comma spaced delimeters", ee);
-                        RESULT = new ExpList(null, null);
+                        RESULT = new ExpList(eeleft, eeright, null, null);
                      :} 
                     ;
