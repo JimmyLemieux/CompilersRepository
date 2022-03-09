@@ -5,11 +5,11 @@ CLASSPATH=-cp /usr/share/java/cup.jar:.
 CUP=cup
 #JFLEX=~/Projects/jflex/bin/jflex
 #CLASSPATH=-cp ~/Projects/java-cup-11b.jar:.
-#CUP=$(JAVA) $(CLASSPATH) java_cup.Main
+#CUP=$(JAVA) $(CLASSPATH) java_cup.CM
 
-all: Main.class
+all: CM.class
 
-Main.class: absyn/*.java parser.java sym.java Lexer.java ShowTreeVisitor.java Scanner.java Main.java
+CM.class: absyn/*.java parser.java sym.java Lexer.java ShowTreeVisitor.java Scanner.java CM.java
 
 %.class: %.java
 	$(JAVAC) $(CLASSPATH) $^
@@ -25,4 +25,4 @@ clean:
 	rm -f parser.java Lexer.java sym.java *.class absyn/*.class *~
 
 test:
-	java -classpath /usr/share/java/cup.jar:. Main test$n.cm -a
+	java -classpath /usr/share/java/cup.jar:. CM $n.cm -a

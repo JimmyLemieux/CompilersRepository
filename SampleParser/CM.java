@@ -1,20 +1,12 @@
 /*
-  Created by: Fei Song
-  File Name: Main.java
-  To Build: 
-  After the scanner, tiny.flex, and the parser, tiny.cup, have been created.
-    javac Main.java
-  
-  To Run: 
-    java -classpath /usr/share/java/cup.jar:. Main gcd.tiny
-
-  where gcd.tiny is an test input file for the tiny language.
+  Created by: James Lemieux
+  File Name: CM.java
 */
    
 import java.io.*;
 import absyn.*;
    
-class Main {
+class CM {
   public final static boolean SHOW_TREE = true;
   static public void main(String argv[]) {    
     /* Start the parser */
