@@ -256,4 +256,13 @@ public class ShowTreeVisitor implements AbsynVisitor {
     vExp.exp.accept(this, level);
 
   }
+
+  public void visit(ArrayAssignExp exp, int level) {
+    indent(level);
+    level++;
+    System.out.println( "ArrayAssignExp:" );
+    exp.lhs.accept(this, level);
+    exp.index.accept(this, level);
+    exp.rhs.accept(this, level);
+  }
 }

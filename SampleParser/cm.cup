@@ -149,11 +149,6 @@ variable_declaration ::= type_specifier:t ID:i SEMI
                     | type_specifier:t ID:i LSB RSB SEMI
                      {: parser.report_error("Invalid array index value", i);
                      RESULT = new ArrayDec(tleft, tright, t, i, null); :}
-                    | ID:i LSB NUM:n RSB SEMI
-                     {: parser.report_error("Invalid array decleration", i);
-                        RESULT = new ArrayDec(ileft, iright, null, i, null);
-                     :}
-                    | ID:i LSB RSB SEMI
                     ;
 
 local_declarations  ::= local_declarations:lds variable_declaration:vd

@@ -1,5 +1,7 @@
 int main(void test){
     int z;
+    int a[400];
+    a[2] = 2;
     j = j + 0;
     while(z = 1) {
       z * 1;
