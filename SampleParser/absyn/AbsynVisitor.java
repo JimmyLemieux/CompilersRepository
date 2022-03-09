@@ -45,4 +45,6 @@ public interface AbsynVisitor {
   public void visit (SimpleIndexVar var, int level);
 
   public void visit (VarDecExp vExp, int level);
+
+  public void visit (ArrayAssignExp exp, int level);
 }
