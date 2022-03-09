@@ -21,7 +21,7 @@ In order build the Parser alone type "make parser.java"  and to display the Synt
     "java -classpath /usr/share/java/cup.jar:. CM 1.cm -a"
 
 Test Files:
-Some test files are provided with the submission which are 1.cm, 2.cm, 3.cm, 4.cm and 5.cm. Each test file covers different aspect of the program.
+Some test files are provided with the submission which are 1.cm, 2.cm, 3.cm, 4.cm and 5.cm. Each test file covers different aspect of the program. Also, there are two additional files that can be tested which are fac.cm and gcd.cm
 
 in order to test the files you can type this command:
 "make test n=[1..5]" where n is the file number, for example if you want to run 2.cm you can type "make test n=2".
