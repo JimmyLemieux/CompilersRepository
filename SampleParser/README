@@ -1,0 +1,25 @@
+Authors: Mustafa Al-Obaidi and James Lemieux
+
+A JFlex+Cup implementation for the CM programming language.
+Note: Some of the code have been taken from Professor Fei Song.
+
+To Build the code:
+
+In order to build the parser type make in the current directory.
+This will generate an executable program called "CM".
+
+To test source code like "1.cm", type:
+
+    "java -cp /usr/share/java/cup.jar:. CM 1.cm"
+
+To test the scanner only type:
+    "java -classpath /usr/share/java/cup.jar:. Scanner < 1.cm"
+
+In order to display the Syntax Tree type:
+
+    "java -classpath /usr/share/java/cup.jar:. CM 1.cm -a"
+
+Test Files:
+Some test files are provided with the submission which are 1.cm, 2.cm, 3.cm, 4.cm and 5.cm. Each test file covers different aspect of the program.
+
+Limitations: While many cases are covered in the Parser, there might be some errors that are not caught be our Parser, and this could be improved in the futute.
