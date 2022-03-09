@@ -204,7 +204,7 @@ param_list          ::= param_list:p1 COMMA param:p2
                      {: RESULT = new VarDecList(p1, null); :}
                     | COMMA param:p3
                      {:parser.report_error("Invalid param list in function", p3);
-                        RESULT = new VarDecList(p3, null);
+                        RESULT = new VarDecList(null, null);
                      :}
                     | error:e
                      {:

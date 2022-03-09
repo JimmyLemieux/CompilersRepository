@@ -1,0 +1,19 @@
+/* Errors in the file:
+
+Error: No expression given for while condition! row: 5 col: 4
+
+*/
+int test;
+
+
+int main(,void test){
+    int arr[15];
+    while(){
+        arr[0] = 3;
+    }
+    if(j = 2) {
+      j = j / 1;
+    }
+    y = input();
+
+}

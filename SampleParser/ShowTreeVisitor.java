@@ -138,10 +138,17 @@ public class ShowTreeVisitor implements AbsynVisitor {
 
   public void visit(ArrayDec exp, int level) {
     indent (level);
-    System.out.print( "ArrayDec: " + exp.arrayName + "[");
-    if (exp.arraySize != null)
-        System.out.print(exp.arraySize.value + "]: ");
+    if (exp.arraySize != null){
+        System.out.print( "ArrayDec: " + exp.arrayName + "[");
+        System.out.println(exp.arraySize.value + "]: ");
+    }
+    else
+        System.out.println("Error: Invalid Array Index! row: " + exp.row + " col: " + exp.col);
+  
     if (exp.type != null) {
+      level++;
+      indent (level);
+      System.out.print("Array Type: ");
       if (exp.type.type == 0)
           System.out.println("Void");
       else if (exp.type.type == 1)
@@ -189,7 +196,12 @@ public class ShowTreeVisitor implements AbsynVisitor {
     level++;
     VarDecList parms = exp.param;
     while (parms != null) {
-        parms.head.accept(this, level);
+        if (parms.head == null){
+          System.out.println("Invalid Declaration list! row : " + exp.row + " col: " + exp.col);
+        }
+        else{
+          parms.head.accept(this, level);
+        }
         parms = parms.tail;
     }
     exp.funBody.accept(this, level);
@@ -223,6 +235,9 @@ public class ShowTreeVisitor implements AbsynVisitor {
 
   public void visit(VarDecList expList, int level) {
     while( expList != null ) {
+        if (expList.head == null){
+          System.out.println("Invalid Declaration list! row : " + expList.row + " col: " + expList.col);
+        }
         expList.head.accept( this, level );
         expList = expList.tail;
     }

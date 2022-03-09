@@ -1,8 +1,0 @@
-/* empty*/
-
-/* Result Error : Syntax error
-instead expected token classes are [VOID, INT]
-Error : Incorrect structure in the declaration_list.
-The abstract syntax tree is:
-java.lang.NullPointerException
-        at Main.main(Main.java:27)*/
