@@ -1,3 +1,7 @@
+/*
+  Created by: James Lemieux and Mustafa Al-Obaidi
+  File Name: SemanticAnalyzer.java
+*/
 import absyn.*;
 
 public class SemanticAnalyzer implements AbsynVisitor{
