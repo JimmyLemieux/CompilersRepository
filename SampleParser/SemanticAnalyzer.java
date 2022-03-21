@@ -16,7 +16,17 @@ public class SemanticAnalyzer implements AbsynVisitor {
     table = new HashMap<String, ArrayList<NodeType>>();
   }
 
-  private boolean isInteger(Declaration d) {
+  public int findType(String name) {
+    ArrayList<NodeType> nodeList = table.get(name);
+    for (int i =0; i<nodeList.size(); i++) {
+      if (nodeList.get(i).name.equals(name)) {
+        return isInteger(nodeList.get(i).def) ? 1 : 0;
+      }
+    }
+    return -1;
+  }
+
+  public boolean isInteger(Declaration d) {
     if (d instanceof VariableDeclaration) {
       VariableDeclaration v = (VariableDeclaration) d;
       return v.type.type == 1;
@@ -25,13 +35,17 @@ public class SemanticAnalyzer implements AbsynVisitor {
       return ad.type.type == 1;
     } else if (d instanceof FunctionDec) {
       FunctionDec fd = (FunctionDec) d;
+      if (fd.funName == "output") {
+        return false;
+      } else if (fd.funName == "input") {
+        return true;
+      }
       return fd.type.type == 1;
     }
     return false;
   }
 
-
-  private void insert(NodeType node) {
+  public void insert(NodeType node) {
     if (!table.containsKey(node.name)) {
       ArrayList<NodeType> list = new ArrayList<NodeType>();
       list.add(0, node);
@@ -43,7 +57,7 @@ public class SemanticAnalyzer implements AbsynVisitor {
     }
   }
 
-  private NodeType lookup(NodeType node) {
+  public NodeType lookup(NodeType node) {
     if (!table.containsKey(node.name)) {
       return null;
     }
@@ -51,7 +65,11 @@ public class SemanticAnalyzer implements AbsynVisitor {
     return c.get(c.size() - 1);
   }
 
-  private void delete(int level) {
+  public boolean inTable(String key) {
+    return table.containsKey(key);
+  }
+
+  public void delete(int level) {
     Set<String> keys = table.keySet();
     ArrayList<String> keysToDelete = new ArrayList<String>();
     
@@ -78,7 +96,49 @@ public class SemanticAnalyzer implements AbsynVisitor {
       NodeType c = current.get(0);
       if (c.level == level) {
         indent(level);
-        System.out.println(c.name + ": def");
+        System.out.print(c.name + ":");
+        if (c.def instanceof FunctionDec) {
+          System.out.print("(");
+          FunctionDec f = (FunctionDec) c.def;
+          if (f.funName.equals("output")) {
+            System.out.println("INT) -> VOID");
+          } else {
+            VarDecList vdl = f.param;
+            boolean isEmptyParam = (vdl == null);
+            while (vdl != null) {
+              VarDec vd = vdl.head;
+              if (vd != null) {
+                VariableDeclaration vardec = (VariableDeclaration) vd;
+                if (isInteger(vardec)) {
+                  System.out.print("INT");
+                } else {
+                  System.out.print("VOID");
+                }
+                if (vdl.tail != null) {
+                  System.out.print(",");
+                }
+              }
+              vdl = vdl.tail;
+            }
+            if (isEmptyParam) System.out.print("VOID");
+            System.out.print(") -> ");
+            if (isInteger(f)) {
+              System.out.println("INT");
+            } else {
+              System.out.println("VOID");
+            }
+          }
+        } else if (c.def instanceof VariableDeclaration) {
+          VariableDeclaration vd = (VariableDeclaration) c.def;
+          if (isInteger(vd)) {
+            System.out.println(" INT");
+          } else System.out.println(" VOID");
+        } else if (c.def instanceof ArrayDec) {
+          ArrayDec ad = (ArrayDec) c.def;
+          if (isInteger(ad)) {
+            System.out.println(" INT");
+          } else System.out.println(" VOID");
+        }
       }
     }
   }
@@ -109,6 +169,7 @@ public class SemanticAnalyzer implements AbsynVisitor {
   }
 
   public void visit( IfExp exp, int level ) {
+    level++;
     if (exp.test != null) {
       exp.test.accept( this, level );
     } else {
@@ -130,7 +191,6 @@ public class SemanticAnalyzer implements AbsynVisitor {
       System.out.println("Leaving a new block");
       delete(level);
     }
-    level--;
   }
 
   public void visit( IntExp exp, int level ) {
@@ -208,14 +268,41 @@ public class SemanticAnalyzer implements AbsynVisitor {
   }
 
   public void visit( SimpleVar var, int level ) {
-    indent( level );
     // System.out.println(" Simple Variable: " + var.varName);
   }
 
   public void visit( VarAssignExp varAssign, int level) {
     indent( level );
-    // System.out.println( "VarAssignExp:" );
-    level++;
+    int lhsType = -1;
+    int rhsType = -1;
+    String lhsName = "";
+    int row = 0;
+    int col = 0;
+    if (varAssign.lhs instanceof SimpleVar) {
+      SimpleVar templhs = (SimpleVar) varAssign.lhs;
+      if (!inTable(templhs.varName)) {
+        System.err.println("Error: Unknown Variable with name: " + templhs.varName + " at row: " + templhs.row + " at col: " + templhs.col);
+      }
+      lhsType = findType(templhs.varName);
+      lhsName = templhs.varName;
+      row = templhs.row;
+      col = templhs.col;
+      if (varAssign.rhs instanceof CallingExp) {
+        CallingExp tempRhs = (CallingExp) varAssign.rhs;
+        if (tempRhs.funName.equals("input")) {
+          rhsType = 1;
+        } else if (tempRhs.funName.equals("output")) {
+          rhsType = 0;
+        } else rhsType = findType(tempRhs.funName);
+      } else {
+        rhsType = 1;
+      }
+    }
+
+    if (lhsType != rhsType) {
+      System.err.println("Error: Type Mismatch for variable with name: " + lhsName + " at row: " + (row + 1) + " at col: " + (col + 1));
+    }
+
     varAssign.lhs.accept( this, level );
     varAssign.rhs.accept( this, level );
   }
@@ -253,7 +340,7 @@ public class SemanticAnalyzer implements AbsynVisitor {
   }
   
   public void visit(CompoundExp exp, int level) {
-    indent (level);
+    // indent (level);
     // System.out.println( "CompoundExp: ");
     level++;
     VarDecList dds = exp.decl;
@@ -346,7 +433,14 @@ public class SemanticAnalyzer implements AbsynVisitor {
       //indent(level);
       //System.out.println("Error: No expression given for while condition! row: " + exp.row + " col: " + exp.col);
     }
+    indent(level);
+    System.out.println("Entering a new block");
     exp.exps.accept(this, level);
+    indent(level);
+    indent(level);
+    printLevel(level);
+    delete(level);
+    System.out.println("Leaving a new block");
   }
 
   public void visit(SimpleVarExp exp, int level) {
@@ -369,6 +463,9 @@ public class SemanticAnalyzer implements AbsynVisitor {
     // indent(level);
     level++;
     // System.out.println( "ArrayAssignExp:" );
+    if (isInteger(exp.lhs.dtype) != isInteger(exp.rhs.dtype)) {
+      System.err.println("Error: Type mismatch for Array. At line: " + (exp.row + 1) + " col: " + (exp.col + 1));
+    }
     exp.lhs.accept(this, level);
     exp.index.accept(this, level);
     exp.rhs.accept(this, level);

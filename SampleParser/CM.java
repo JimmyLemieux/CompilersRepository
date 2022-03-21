@@ -31,10 +31,15 @@ class CM {
       }
       else if(SHOW_SEMATIC){
         System.out.println("The Semantic analyzer tree is:");
-        SemanticAnalyzer visitor = new SemanticAnalyzer();
         System.out.println("Entering the global scope:");
+        SemanticAnalyzer visitor = new SemanticAnalyzer();
+        NodeType node = new NodeType("input", new FunctionDec(0, 0, new TypeName(0,0, TypeName.INT), "input", null, null), 0);
+        visitor.insert(node);
+        NodeType node2 = new NodeType("output", new FunctionDec(0, 0, new TypeName(0,0, TypeName.VOID), "output", null, null), 0);
+        visitor.insert(node2);
         if (result != null)
           result.accept(visitor,0);
+        visitor.printLevel(0);
         System.out.println("Leaving the global scope");
       }
     
