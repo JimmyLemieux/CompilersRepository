@@ -4,6 +4,7 @@ void main(void) {
   int x; 
   int fac;
   int a[100];
+  int a[10];
   a[2] = 4;
   x = input();
 

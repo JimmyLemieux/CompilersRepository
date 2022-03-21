@@ -7,7 +7,7 @@ CUP=cup
 #CLASSPATH=-cp ~/Projects/java-cup-11b.jar:.
 #CUP=$(JAVA) $(CLASSPATH) java_cup.CM
 
-all: CM.class
+all: clean CM.class run
 
 CM.class: absyn/*.java parser.java sym.java Lexer.java ShowTreeVisitor.java Scanner.java CM.java
 
@@ -26,3 +26,6 @@ clean:
 
 test:
 	java -classpath /usr/share/java/cup.jar:. CM $n.cm -a
+
+run:
+	java -classpath /usr/share/java/cup.jar:. CM gcd.cm -s
