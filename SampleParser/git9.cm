@@ -1,0 +1,15 @@
+void test(void){
+  return;
+}
+
+int main(int y){
+    int j[1];
+    j[test()];
+   
+    if(test() == test()){
+      int k;
+    } else {
+      int q;
+    }
+    return;
+}

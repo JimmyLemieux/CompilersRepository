@@ -1,0 +1,18 @@
+1 - When you run fac.cm you get these errors:
+Error: Calling function with invalid params. With name output at row: 1 at col: 1
+Error: Calling function with incorrect number of paramaters for function name: output at row: 14 col: 3
+
+2 - gcd.cm
+Error : Invalid symbol in expression
+Error: Calling function with invalid params. With name output at row: 1 at col: 1
+Error: Calling function with incorrect number of paramaters for function name: output at row: 14 col: 4
+Error: Calling function with incorrect number of paramaters for function name: gcd at row: 14 col: 11
+
+3- sort.cm
+
+Error : Invalid symbol in expression
+Error: Calling function with invalid params. With name output at row: 1 at col: 1
+Error: Calling function with incorrect number of paramaters for function name: output at row: 40 col: 7
+
+
+Note: Check function paramaters.
