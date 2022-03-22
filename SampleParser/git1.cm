@@ -1,0 +1,23 @@
+/* file with no errors */
+int hello;
+int testing[3];
+
+int main(int test, int z){
+    int k;
+    int s;
+    while(k < 3) {
+        int s;
+        s = k + testing[2];
+    }
+    if(s <2){
+        int apples;
+        apples = k + s * testing[2];
+    }
+    return 0;
+}
+
+int test2(int a){
+    int m;
+    main(m,a);
+    return m;
+}

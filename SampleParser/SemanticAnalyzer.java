@@ -74,8 +74,11 @@ public class SemanticAnalyzer implements AbsynVisitor {
     ArrayList<String> keysToDelete = new ArrayList<String>();
     
     for (String key : keys) {
+     // indent(level);
+      //System.out.print(key + ": ");
       ArrayList<NodeType> c = table.get(key);
       NodeType current = c.get(0);
+      // System.out.println(current.level);
       if (current.level == level) {
         // remove the key
         c.remove(current);
@@ -331,7 +334,6 @@ public class SemanticAnalyzer implements AbsynVisitor {
   public void visit(CallingExp exp, int level) {
     indent( level );
     // System.out.println( "CallExp: " + exp.funName);
-    level++;
     ExpList args = exp.args;
     while (args != null) {
         args.head.accept(this, level);
@@ -342,7 +344,6 @@ public class SemanticAnalyzer implements AbsynVisitor {
   public void visit(CompoundExp exp, int level) {
     // indent (level);
     // System.out.println( "CompoundExp: ");
-    level++;
     VarDecList dds = exp.decl;
     while (dds != null) {
         dds.head.accept(this, level);
@@ -357,13 +358,13 @@ public class SemanticAnalyzer implements AbsynVisitor {
 
   public void visit(FunctionDec exp, int level) {
     ArrayList<NodeType> check = table.get(exp.funName);
-
     if (check != null && check.get(0).level == level) {
       System.err.println("Error: Redefined Function " + exp.funName + " at the same level, at line: " + exp.row + " column: " + exp.col);
     } else {
       NodeType newNode = new NodeType(exp.funName, exp, level);
       insert(newNode);
     }
+
     level++;
     indent(level);
     System.out.println("Entering the scope for function: " + exp.funName + ":");
@@ -378,9 +379,11 @@ public class SemanticAnalyzer implements AbsynVisitor {
         }
         parms = parms.tail;
     }
+    
     exp.funBody.accept(this, level);
-    printLevel(level);
+
     indent(level);
+    printLevel(level);
     delete(level);
     System.out.println("Leaving the scope for function: " + exp.funName + ":");
   }

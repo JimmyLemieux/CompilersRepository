@@ -5,9 +5,6 @@ int gcd(int u, int v) {
       return gcd(v, u – u/v*v); 
 }  
 
-void test() {
-}
-
 void main(void) { 
    int x; int y;
    x = input();
