@@ -238,47 +238,67 @@ public class SemanticAnalyzer implements AbsynVisitor {
   public void visit( OpExp exp, int level ) {
     // indent( level );
     //System.out.print( "OpExp:" ); 
-    switch( exp.operation ) {
-      case OpExp.PLUS:
-        //System.out.println( " + " );
-        break;
-      case OpExp.MINUS:
-        //System.out.println( " - " );
-        break;
-      case OpExp.TIMES:
-        //System.out.println( " * " );
-        break;
-      case OpExp.OVER:
-        //System.out.println( " / " );
-        break;
-      case OpExp.EQ:
-        // System.out.println( " = " );
-        break;
-      case OpExp.LT:
-        // System.out.println( " < " );
-        break;
-      case OpExp.GT:
-        // System.out.println( " > " );
-        break;
-      case OpExp.MUL:
-        // System.out.println(" * ");
-        break;
-      case OpExp.LTEQ:
-        // System.out.println(" <= ");
-        break;
-      case OpExp.NOTEQ:
-        // System.out.println(" != ");
-        break;
-      case OpExp.GTEQ:
-        // System.out.println(" >= ");
-        break;
-      default:
-        //indent(level);
-        // System.out.println( "Error: Unrecognized operator at row: " + exp.row + " and col: " + exp.col);
-    }
+
     level++;
     exp.left.accept( this, level );
     exp.right.accept( this, level );
+    String varName = "";
+    if (exp.left instanceof SimpleVarExp) {
+      SimpleVarExp tempSimp = (SimpleVarExp) exp.left;
+      if (tempSimp.var instanceof SimpleVar) {
+        SimpleVar tempSVar = (SimpleVar) tempSimp.var;
+        varName = tempSVar.varName;
+      } else if (tempSimp.var instanceof SimpleIndexVar) {
+        SimpleIndexVar tempSIVar = (SimpleIndexVar) tempSimp.var;
+        varName = tempSIVar.varName;
+      }
+      if (findVariable(varName) != null) {
+        if (findType(varName) != 1) {
+          System.err.println("Error: Left side of operation is not an integer at row: " + (exp.left.row + 1) + " and col: " + (exp.left.col + 1));
+        }
+      } else {
+        System.err.println("Error: Undeclared operation at row: " + (exp.left.row + 1) + " col: " + (exp.left.col + 1));
+      }
+    } else if (exp.left instanceof CallingExp) {
+      CallingExp tempCall = (CallingExp) exp.left;
+      varName = tempCall.funName;
+      if (findFunction(varName) != null) {
+        if (findType(varName) != 1) {
+          System.err.println("Error: Left side of operation is not an integer at row: " + (exp.left.row + 1) + " and col: " + (exp.left.col + 1));
+        } 
+      } else {
+          System.err.println("Error: Undeclared operation at row: " + (exp.left.row + 1) + " col: " + (exp.left.col + 1));
+      }
+    }
+
+    if (exp.right instanceof SimpleVarExp) {
+      SimpleVarExp tempSimp = (SimpleVarExp) exp.right;
+      if (tempSimp.var instanceof SimpleVar) {
+        SimpleVar tempSVar = (SimpleVar) tempSimp.var;
+        varName = tempSVar.varName;
+      } else if (tempSimp.var instanceof SimpleIndexVar) {
+        SimpleIndexVar tempSIVar = (SimpleIndexVar) tempSimp.var;
+        varName = tempSIVar.varName;
+      }
+      if (findVariable(varName) != null) {
+        if (findType(varName) != 1) {
+          System.err.println("Error: Right side of operation is not an integer. Or has a VOID variable in expression at row: " + (exp.right.row + 1) + " and col: " + (exp.right.col + 1));
+        }
+      } else {
+        System.err.println("Error: Undeclared operation at row: " + (exp.right.row + 1) + " col: " + (exp.right.col + 1));
+      }
+    } else if (exp.right instanceof CallingExp) {
+      CallingExp tempCall = (CallingExp) exp.right;
+      varName = tempCall.funName;
+      if (findFunction(varName) != null) {
+        if (findType(varName) != 1) {
+          System.err.println("Error: Right side of operation is not an integer or contains a VOID expression at row: " + (exp.right.row + 1) + " and col: " + (exp.right.col + 1));
+        } 
+      } else {
+          System.err.println("Error: Undeclared operation at row: " + (exp.right.row + 1) + " col: " + (exp.right.col + 1));
+      }
+    }
+
   }
 
   public void visit( VarExp exp, int level ) {
@@ -317,7 +337,7 @@ public class SemanticAnalyzer implements AbsynVisitor {
     }
 
     if (current != null) {
-      var.dtype = current.def;
+    var.dtype = current.def;
     }
   }
 
@@ -381,7 +401,7 @@ public class SemanticAnalyzer implements AbsynVisitor {
     } else {
       if (exp.type != null && exp.type.type == 0) {
         System.err.println("Error: variables cannot be defined as VOID type, at line: " + (exp.row + 1) + " column: " + (exp.col + 1));
-        exp.type.type = 1;
+        exp.type.type = 0;
       }
     }
     NodeType newNode = new NodeType(exp.arrayName, exp, level);
@@ -403,15 +423,38 @@ public class SemanticAnalyzer implements AbsynVisitor {
       FunctionDec temp = (FunctionDec) functionNode.def;
       funargs = temp.param;
     }
-    // the number of Exp in exp list and the types have to match in this
+
     
     ExpList args = exp.args;
-    if (args != null && funargs == null && functionNode != null) {
-      System.err.println("Error: Calling function with invalid params. With name " + functionNode.name + " at row: " + (functionNode.def.row + 1) + " at col: " + (functionNode.def.col + 1));
-    }
+
     ExpList tempArgs = args;
+    ExpList tempArgs2 = args;
+    VarDecList tempFunArgs = funargs;
+
+    while (args != null) {
+        args.head.accept(this, level);
+        args = args.tail;
+    }
+
     int callCount = 0;
     int funCount = 0;
+
+    if (args != null && funargs == null && functionNode != null && !functionNode.name.equals("output")) {
+      System.err.println("Error: Calling function with mismatched type params. With name " + functionNode.name + " at row: " + (functionNode.def.row + 1) + " at col: " + (functionNode.def.col + 1));
+    }
+
+    // For the typemismatch check in function call!
+    while (tempArgs2 != null && tempFunArgs != null) {
+      VariableDeclaration tempVd = (VariableDeclaration) tempFunArgs.head;
+      if (isInteger(tempArgs2.head.dtype) != isInteger(tempVd)) {
+        System.err.println("Error: Type mistmatch for function argument at row: " + (tempArgs2.row + 1) + " and col: " + (tempArgs2.col + 1));
+      }
+      tempArgs2 = tempArgs2.tail;
+      tempFunArgs = tempFunArgs.tail;
+    }
+
+
+    // For the number of param check!
     while (tempArgs != null) {
       callCount++;
       tempArgs = tempArgs.tail;
@@ -421,13 +464,9 @@ public class SemanticAnalyzer implements AbsynVisitor {
       funargs = funargs.tail;
     }
 
-    if (callCount != funCount) {
+    // System.err.println(callCount + " " + funCount);
+    if (callCount != funCount && !functionNode.name.equals("output")) {
       System.err.println("Error: Calling function with incorrect number of paramaters for function name: " + exp.funName + " at row: " + (exp.row + 1) + " col: " + (exp.col + 1));
-    }
-
-    while (args != null) {
-        args.head.accept(this, level);
-        args = args.tail;
     }
   }
   
@@ -521,7 +560,6 @@ public class SemanticAnalyzer implements AbsynVisitor {
     } else {
       if (exp.type.type == 0) {
         System.err.println("Error: variables cannot be defined as VOID type, at line: " + (exp.row + 1) + " column: " + (exp.col + 1));
-        exp.type.type = 1;
       }
       NodeType newNode = new NodeType(exp.sname, exp, level);
       insert(newNode);

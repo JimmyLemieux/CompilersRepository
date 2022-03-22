@@ -1,9 +1,17 @@
 /* A program to compute the factorial value of an input */
 
+void test(int x) {
+
+}
+
 void main(void) {
   int x; 
   int fac;
-  x = input();
+  int y;
+  int a[100];
+  a[2] = 3;
+  test(y);
+  x = x + fac * y - x / a[2];
   fac = 1;
 
   while (x > 1) {
