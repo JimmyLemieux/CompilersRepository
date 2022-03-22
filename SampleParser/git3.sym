@@ -1,0 +1,17 @@
+The Semantic analyzer tree is:
+Entering the global scope:
+    Entering the scope for function: thing:
+        y: INT
+Leaving the scope for function: thing:
+    Entering the scope for function: main:
+        Simple Index Var:a
+        Simple Index Var:a
+        test: INT
+    z: INT
+Leaving the scope for function: main:
+output:(INT) -> VOID
+input:(VOID) -> INT
+a: INT[8]
+main:(INT) -> INT
+thing:(VOID) -> VOID
+Leaving the global scope

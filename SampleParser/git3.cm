@@ -1,0 +1,15 @@
+int a[8];
+
+void thing(void){
+  int y;
+  return;
+}
+
+int main(int test){
+  int z;
+
+  a[2] = q;
+  a[z] = thing();
+
+  return thing();
+}

@@ -11,6 +11,7 @@ Leaving the scope for function: gcd:
     Entering the scope for function: main:
                     x: INT
     y: INT
+    z: INT
 Leaving the scope for function: main:
 output:(INT) -> VOID
 input:(VOID) -> INT

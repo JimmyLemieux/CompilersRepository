@@ -7,8 +7,9 @@ int gcd(int u, int v) {
 
 void main(void) { 
    int x; int y;
+   int z;
    x = input();
    y = input(); 
    x = x + y;
-   output(gcd(x, y)); 
+   output(gcd(x, z, x, x)); 
 }

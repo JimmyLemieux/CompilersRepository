@@ -1,0 +1,11 @@
+void test(void){
+  return;
+}
+
+int main(int y){
+    int j[1];
+
+
+    int j;
+    return;
+}
