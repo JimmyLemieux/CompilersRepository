@@ -130,7 +130,7 @@ public class SemanticAnalyzer implements AbsynVisitor {
       ArrayList<NodeType> current = table.get(key);
       NodeType c = current.get(0);
       if (c.level == level) {
-        indent(level);
+        indent(globalLevel);
         System.out.print(c.name + ":");
         if (c.def instanceof FunctionDec) {
           System.out.print("(");
@@ -204,6 +204,7 @@ public class SemanticAnalyzer implements AbsynVisitor {
   }
 
   public void visit( IfExp exp, int level ) {
+    globalLevel++;
     level++;
     if (exp.test != null) {
       exp.test.accept( this, level );
@@ -214,17 +215,19 @@ public class SemanticAnalyzer implements AbsynVisitor {
     if (exp.thenpart != null) {
       exp.thenpart.accept( this, level );
     }
-    printLevel(level);
+    printLevel(globalLevel);
     delete(level);
+    indent(globalLevel);
     System.out.println("Leaving a new block");
     if (exp.elsepart != null ) {
-      indent(level);
+      indent(globalLevel);
       System.out.println("Entering a new block");
       exp.elsepart.accept( this, level );
-      printLevel(level);
+      printLevel(globalLevel);
       System.out.println("Leaving a new block");
       delete(level);
     }
+    globalLevel--;
   }
 
   public void visit( IntExp exp, int level ) {
@@ -319,7 +322,7 @@ public class SemanticAnalyzer implements AbsynVisitor {
   }
 
   public void visit( VarAssignExp varAssign, int level) {
-    indent( level );
+    // indent( globalLevel );
     int lhsType = -1;
     int rhsType = -1;
     String lhsName = "";
@@ -355,7 +358,7 @@ public class SemanticAnalyzer implements AbsynVisitor {
   }
 
   public void visit(SimpleIndexVar var, int level) {
-    indent( level );
+    // indent( globalLevel );
     System.out.println("Simple Index Var:" + var.varName);
 
     // TODO: Check an error here for the index of the variable!
@@ -395,8 +398,6 @@ public class SemanticAnalyzer implements AbsynVisitor {
     if (functionNode == null) {
       System.err.println("Error: Invalid function with name: " + functionName + " at row: " + (exp.row+1) + " and col: " + (exp.col + 1));
     } 
-    
-    
     if (functionNode != null) {
       exp.dtype = functionNode.def;
       FunctionDec temp = (FunctionDec) functionNode.def;
@@ -459,7 +460,8 @@ public class SemanticAnalyzer implements AbsynVisitor {
     }
 
     level++;
-    indent(level);
+    globalLevel++;
+    indent(globalLevel);
     System.out.println("Entering the scope for function: " + exp.funName + ":");
 
     VarDecList parms = exp.param;
@@ -478,10 +480,12 @@ public class SemanticAnalyzer implements AbsynVisitor {
     currentFunctionScope = "";
     // Check the return ty
 
-    indent(level);
-    printLevel(level);
+    indent(globalLevel);
+    printLevel(globalLevel);
     delete(level);
+    indent(globalLevel);
     System.out.println("Leaving the scope for function: " + exp.funName + ":");
+    globalLevel--;
   }
 
   public void visit(ReturnExp exp, int level) {
@@ -541,18 +545,21 @@ public class SemanticAnalyzer implements AbsynVisitor {
     //indent (level);
     //System.out.println( "WhileExp: ");
     level++;
+    globalLevel++;
     if (exp.test != null)
       exp.test.accept(this, level);
     else {
       //indent(level);
       //System.out.println("Error: No expression given for while condition! row: " + exp.row + " col: " + exp.col);
     }
-    indent(level);
+    indent(globalLevel);
     System.out.println("Entering a new block");
     exp.exps.accept(this, level);
-    printLevel(level);
+    printLevel(globalLevel);
     delete(level);
+    indent(globalLevel);
     System.out.println("Leaving a new block");
+    globalLevel--;
   }
 
   public void visit(SimpleVarExp exp, int level) {
