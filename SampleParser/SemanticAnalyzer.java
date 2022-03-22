@@ -139,7 +139,7 @@ public class SemanticAnalyzer implements AbsynVisitor {
         } else if (c.def instanceof ArrayDec) {
           ArrayDec ad = (ArrayDec) c.def;
           if (isInteger(ad)) {
-            System.out.println(" INT");
+            System.out.println(" INT[" + ad.arraySize.value + "]");
           } else System.out.println(" VOID");
         }
       }
@@ -176,7 +176,6 @@ public class SemanticAnalyzer implements AbsynVisitor {
     if (exp.test != null) {
       exp.test.accept( this, level );
     } else {
-      indent(level);
       System.out.println("Error: No expression given for if condition! row: " + exp.row + " col: " + exp.col);
     }
     System.out.println("Entering a new block");
@@ -311,8 +310,10 @@ public class SemanticAnalyzer implements AbsynVisitor {
   }
 
   public void visit(SimpleIndexVar var, int level) {
-    indent( level );
+    // indent( level );
     // System.out.println("Simple Index Var:" + var.varName);
+    
+    // TODO: Check an error here for the index of the variable!
     level++;
     var.exp.accept(this, level);
   }
@@ -332,7 +333,7 @@ public class SemanticAnalyzer implements AbsynVisitor {
   }
 
   public void visit(CallingExp exp, int level) {
-    indent( level );
+    // indent( level );
     // System.out.println( "CallExp: " + exp.funName);
     ExpList args = exp.args;
     while (args != null) {
@@ -439,8 +440,6 @@ public class SemanticAnalyzer implements AbsynVisitor {
     indent(level);
     System.out.println("Entering a new block");
     exp.exps.accept(this, level);
-    indent(level);
-    indent(level);
     printLevel(level);
     delete(level);
     System.out.println("Leaving a new block");

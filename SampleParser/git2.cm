@@ -1,0 +1,14 @@
+
+void foo(int a, int b, int c){
+
+}
+
+void main(void){
+    int a[2]; int x; int y;
+    a[foo(x,x,x)] = 1;
+
+    x = x * 2 + 1;
+    y = x + foo(x,x,x);
+
+    foo();
+}
