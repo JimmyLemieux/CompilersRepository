@@ -23,13 +23,15 @@ class CM {
       }
       parser p = new parser(new Lexer(new FileReader(argv[0])));
       Absyn result = (Absyn)(p.parse().value);      
-      if (SHOW_TREE) {
-         System.out.println("The abstract syntax tree is:");
-         ShowTreeVisitor visitor = new ShowTreeVisitor();
-         if (result != null)
-          result.accept(visitor, 0);
+      if (SHOW_TREE && result != null) {
+        System.out.println("The abstract syntax tree is:");
+        ShowTreeVisitor visitor = new ShowTreeVisitor();
+        result.accept(visitor, 0);
       }
-      else if(SHOW_SEMATIC){
+      else if(SHOW_SEMATIC && result != null){
+        System.out.flush();
+        PrintStream out = new PrintStream(new FileOutputStream(argv[0].replace(".cm", ".sym")));
+        System.setOut(out);
         System.out.println("The Semantic analyzer tree is:");
         System.out.println("Entering the global scope:");
         SemanticAnalyzer visitor = new SemanticAnalyzer();
@@ -37,8 +39,7 @@ class CM {
         visitor.insert(node);
         NodeType node2 = new NodeType("output", new FunctionDec(0, 0, new TypeName(0,0, TypeName.VOID), "output", null, null), 0);
         visitor.insert(node2);
-        if (result != null)
-          result.accept(visitor,0);
+        result.accept(visitor,0);
         visitor.printLevel(0);
         System.out.println("Leaving the global scope");
       }
