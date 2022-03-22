@@ -3,11 +3,7 @@ void test(void){
 }
 
 int main(int y){
-    int j[1];
-    int a;
-    a = 3;
-    if (a < 4) {
-        int k;
+    if(x == 3){
     }
 
     int j;
