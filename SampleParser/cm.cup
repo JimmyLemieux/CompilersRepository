@@ -79,7 +79,6 @@ non terminal TypeName type_specifier;
 non terminal DeclarationList program, declaration_list;
 non terminal VarDecList param_list, local_declarations;
 non terminal ExpList statement_list, args, arg_list;
-non terminal Integer addop, mulop;
 non terminal Var var;
 
 /*precedence*/
@@ -231,7 +230,7 @@ selection_stmt      ::= IF LPAREN expression:e RPAREN statement:s1
                     | IF LPAREN expression:e RPAREN statement:s2 ELSE statement:s3
                      {: RESULT = new IfExp(eleft, eright, e, s2, s3); :}
                     | IF:i LPAREN RPAREN statement:s1
-                     {: parser.report_error("Invalid If condition", i); 
+                     {: parser.report_error("Invalid If condition.", i); 
                         RESULT = new IfExp(ileft, iright, null, s1, null);
                      :}
                     ;
@@ -282,12 +281,6 @@ expression          ::= variable_declaration:v ASSIGN expression:e
                      :}
                     | factor:f
                      {: RESULT = f; :}
-                    ;
-
-addop               ::= PLUS:p
-                     {: RESULT = OpExp.PLUS; :}
-                    | MINUS
-                     {: RESULT = OpExp.MINUS; :}
                     ;
 
 term                ::= term:t TIMES:i factor:f

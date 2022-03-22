@@ -1,15 +1,15 @@
 int a[8];
 
-void thing(void){
+void thing(int x){
   int y;
   return;
 }
 
 int main(int test){
-  int z;
+  int x;
+  x = 3;
+  if (x < 10) {
 
-  a[2] = q;
-  a[z] = thing();
-
-  return thing();
+  }
+  return 1;
 }
