@@ -327,7 +327,8 @@ public class SemanticAnalyzer implements AbsynVisitor {
   public void visit( SimpleVar var, int level ) {
     // System.out.println(" Simple Variable: " + var.varName);
     // lookup the symbol and check the type
-    NodeType current = findVariable(var.varName);
+    ArrayList<NodeType> currentList = table.get(var.varName);
+    NodeType current = currentList.get(0);
     if (current == null) {
       System.err.println("Error: Unknown variable named " + var.varName + " at row: " + (var.row + 1) + " and col: " + (var.col + 1)); 
     }
@@ -350,9 +351,9 @@ public class SemanticAnalyzer implements AbsynVisitor {
     int col = 0;
     if (varAssign.lhs instanceof SimpleVar) {
       SimpleVar templhs = (SimpleVar) varAssign.lhs;
-      if (!inTable(templhs.varName)) {
-        System.err.println("Error: Unknown Variable with name: " + templhs.varName + " at row: " + templhs.row + " at col: " + templhs.col);
-      }
+      // if (!inTable(templhs.varName)) {
+      //   System.err.println("Error: Unknown Variable with name: " + templhs.varName + " at row: " + templhs.row + " at col: " + templhs.col);
+      // }
       lhsType = findType(templhs.varName);
       lhsName = templhs.varName;
       row = templhs.row;
