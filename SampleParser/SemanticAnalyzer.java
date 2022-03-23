@@ -211,6 +211,7 @@ public class SemanticAnalyzer implements AbsynVisitor {
     } else {
       System.out.println("Error: No expression given for if condition! row: " + exp.row + " col: " + exp.col);
     }
+    indent(globalLevel);
     System.out.println("Entering a new block");
     if (exp.thenpart != null) {
       exp.thenpart.accept( this, level );

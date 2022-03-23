@@ -1,0 +1,15 @@
+The Semantic analyzer tree is:
+Entering the global scope:
+    Entering the scope for function: test:
+        c: INT
+    Leaving the scope for function: test:
+    Entering the scope for function: main:
+        c: INT      
+    array3: INT[3]
+    Leaving the scope for function: main:
+output:(INT) -> VOID
+input:(VOID) -> INT
+b: INT[2]
+test:(INT) -> VOID
+main:(VOID) -> VOID
+Leaving the global scope

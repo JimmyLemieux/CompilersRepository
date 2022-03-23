@@ -1,18 +1,24 @@
-1 - When you run fac.cm you get these errors:
-Error: Calling function with invalid params. With name output at row: 1 at col: 1
-Error: Calling function with incorrect number of paramaters for function name: output at row: 14 col: 3
+int b[2];
 
-2 - gcd.cm
-Error : Invalid symbol in expression
-Error: Calling function with invalid params. With name output at row: 1 at col: 1
-Error: Calling function with incorrect number of paramaters for function name: output at row: 14 col: 4
-Error: Calling function with incorrect number of paramaters for function name: gcd at row: 14 col: 11
+void main(void y){
+    void a;
+    int c;
+    int d[3];
 
-3- sort.cm
+    a = 1 / 2 + a;
 
-Error : Invalid symbol in expression
-Error: Calling function with invalid params. With name output at row: 1 at col: 1
-Error: Calling function with incorrect number of paramaters for function name: output at row: 40 col: 7
+    c = b;
 
+    d = b;
+}
+maybe check indenting.
 
-Note: Check function paramaters.
+Above: 2 arrays assigned
+
+return type checks :
+
+Integer function with no  return
+
+void with return int
+
+integer with return only

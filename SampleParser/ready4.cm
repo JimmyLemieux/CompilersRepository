@@ -1,0 +1,18 @@
+/*Errors:
+Error: Invalid return type. Expecting INT for function: fun1 at row: 8 at col: 3
+Error: Unknown variable named q at row: 16 and col: 12
+Error: Type Mismatch for variable with name: arr at row: 17 at col: 3*/
+int fun1(void){
+  int y;
+  return;
+}
+void fun2(void){
+    int c;
+}
+int main(void){
+  int arr[20];
+  int m;
+  arr[5] = q;
+  arr[m] = fun2();
+  return fun1();
+}

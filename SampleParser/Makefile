@@ -28,4 +28,4 @@ test:
 	java -classpath /usr/share/java/cup.jar:. CM $n.cm -a
 
 run:
-	java -classpath /usr/share/java/cup.jar:. CM fac.cm -s
+	java -classpath /usr/share/java/cup.jar:. CM ready1.cm -s
