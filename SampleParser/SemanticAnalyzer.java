@@ -13,6 +13,7 @@ public class SemanticAnalyzer implements AbsynVisitor {
   int globalLevel = 0;
   // boolean isArrayIndex = false;
   String currentFunctionScope;
+  boolean didHitReturnState = false;
 
   public SemanticAnalyzer() {
     table = new HashMap<String, ArrayList<NodeType>>();
@@ -189,7 +190,7 @@ public class SemanticAnalyzer implements AbsynVisitor {
       if (expList.head != null) {
         expList.head.accept( this, level );
       } else {
-        System.out.println("Error: Invalid Expression List. row: " + expList.row + " col: " + expList.col);
+        // System.out.println("Error: Invalid Expression List. row: " + expList.row + " col: " + expList.col);
       }
       expList = expList.tail;
     } 
@@ -209,7 +210,7 @@ public class SemanticAnalyzer implements AbsynVisitor {
     if (exp.test != null) {
       exp.test.accept( this, level );
     } else {
-      System.out.println("Error: No expression given for if condition! row: " + exp.row + " col: " + exp.col);
+      // System.out.println("Error: No expression given for if condition! row: " + exp.row + " col: " + exp.col);
     }
     indent(globalLevel);
     System.out.println("Entering a new block");
@@ -228,7 +229,7 @@ public class SemanticAnalyzer implements AbsynVisitor {
       System.out.println("Leaving a new block");
       delete(level);
     }
-    globalLevel--;
+    //globalLevel--;
   }
 
   public void visit( IntExp exp, int level ) {
@@ -349,6 +350,7 @@ public class SemanticAnalyzer implements AbsynVisitor {
     int lhsType = -1;
     int rhsType = -1;
     String lhsName = "";
+    boolean arraySkip = false;
     int row = 0;
     int col = 0;
     if (varAssign.lhs instanceof SimpleVar) {
@@ -367,7 +369,19 @@ public class SemanticAnalyzer implements AbsynVisitor {
         } else if (tempRhs.funName.equals("output")) {
           rhsType = 0;
         } else rhsType = findType(tempRhs.funName);
-      } else {
+      } else if (varAssign.rhs instanceof SimpleVarExp) {
+        SimpleVarExp tempExp = (SimpleVarExp) varAssign.rhs;
+        SimpleVar tempSimp = (SimpleVar) tempExp.var;
+        NodeType left = findVariable(templhs.varName);
+        NodeType right = findVariable(tempSimp.varName);
+        if (left != null && right != null && left.def instanceof ArrayDec && right.def instanceof ArrayDec) {
+          arraySkip = true;
+          System.err.println("Error: Cannot Assign Array to another Array. At row: " + (tempSimp.row + 1) + " At col: " + (tempSimp.col + 1));
+        }
+      }
+      
+      
+      else {
         rhsType = 1;
       }
     } else if (varAssign.lhs instanceof SimpleIndexVar) {
@@ -391,7 +405,7 @@ public class SemanticAnalyzer implements AbsynVisitor {
       }
     }
 
-    if (lhsType != rhsType && lhsType != -2) {
+    if (lhsType != rhsType && lhsType != -2 && !arraySkip) {
       System.err.println("Error: Type Mismatch for variable with name: " + lhsName + " at row: " + (row + 1) + " at col: " + (col + 1));
     }
 
@@ -545,21 +559,27 @@ public class SemanticAnalyzer implements AbsynVisitor {
     }
     
     currentFunctionScope = exp.funName;
+    this.didHitReturnState = false;
     exp.funBody.accept(this, level);
     currentFunctionScope = "";
     // Check the return ty
+    if (isInteger(exp) && !didHitReturnState) {
+      System.err.println("Error: Expecting a return for INT return function with name: " + (exp.funBody) + " at row: " + (exp.row + 1) + " at col: " + (exp.col + 1));
+    }
 
     indent(globalLevel);
     printLevel(globalLevel);
     delete(level);
     indent(globalLevel);
     System.out.println("Leaving the scope for function: " + exp.funName + ":");
+    didHitReturnState = false;
     globalLevel--;
   }
 
   public void visit(ReturnExp exp, int level) {
     // indent (level);
     // System.out.println( "ReturnExp: ");
+    didHitReturnState = true;
     NodeType c = null;
     if (!currentFunctionScope.equals("")) {
       c = findFunction(currentFunctionScope);
@@ -568,6 +588,10 @@ public class SemanticAnalyzer implements AbsynVisitor {
     if (exp.expr == null && c != null && isInteger(c.def)) {
       System.err.println("Error: Invalid return type. Expecting INT for function: " + c.name + " at row: " + (exp.row + 1) + " at col: " + (exp.col + 1));
     }
+    if (exp.expr != null && c != null && !isInteger(c.def)) {
+      System.err.println("Error: Invalid return type. Expecting VOID return for function: " + c.name + " at row: " + (exp.row + 1) + " at col: " + (exp.col + 1));
+    }
+
     if (exp.expr != null) {
       exp.expr.accept(this, level);
       if (exp.expr instanceof CallingExp) {
@@ -602,7 +626,7 @@ public class SemanticAnalyzer implements AbsynVisitor {
   public void visit(VarDecList expList, int level) {
     while( expList != null ) {
         if (expList.head == null){
-          System.out.println("Invalid Declaration list! row : " + (expList.row + 1) + " col: " + (expList.col + 1));
+          // System.out.println("Invalid Declaration list! row : " + (expList.row + 1) + " col: " + (expList.col + 1));
         }
         expList.head.accept( this, level );
         expList = expList.tail;

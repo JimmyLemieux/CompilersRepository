@@ -1,0 +1,13 @@
+int b[2];
+
+void main(void y){
+    void a;
+    int c;
+    int d[3];
+
+    a = 1 / 2 + a;
+
+    c = b;
+
+    d = b;
+}
