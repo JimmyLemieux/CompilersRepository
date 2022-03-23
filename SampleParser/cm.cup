@@ -276,8 +276,7 @@ expression          ::= variable_declaration:v ASSIGN expression:e
                     | expression:aa1 NOTEQ expression:aa2
                      {: RESULT = new OpExp(aa1left, aa1right, aa1, OpExp.NOTEQ, aa2); :}
                     | expression:aa1 ERROR:e expression:aa2
-                     {: parser.report_error("Invalid symbol in expression", e);
-                        RESULT = new OpExp(aa1left, aa1right, aa1, OpExp.ERROR, aa2);
+                     {: RESULT = new OpExp(aa1left, aa1right, aa1, OpExp.ERROR, aa2);
                      :}
                     | factor:f
                      {: RESULT = f; :}
