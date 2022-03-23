@@ -400,7 +400,6 @@ public class SemanticAnalyzer implements AbsynVisitor {
 
   public void visit(SimpleIndexVar var, int level) {
     // indent( globalLevel );
-    System.out.println("Simple Index Var:" + var.varName);
 
     // TODO: Check an error here for the index of the variable!
      level++;
