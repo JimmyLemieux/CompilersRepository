@@ -330,7 +330,7 @@ public class SemanticAnalyzer implements AbsynVisitor {
     // lookup the symbol and check the type
     ArrayList<NodeType> currentList = table.get(var.varName);
     NodeType current = currentList.get(0);
-    if (current == null) {
+    if (currentList == null || currentList.isEmpty()) {
       System.err.println("Error: Unknown variable named " + var.varName + " at row: " + (var.row + 1) + " and col: " + (var.col + 1)); 
     }
     
@@ -551,7 +551,7 @@ public class SemanticAnalyzer implements AbsynVisitor {
         if (c != null && isInteger(c.def) != isInteger(call.dtype)) {
           System.err.println("Error: Invalid return type for function at row: " + (exp.row + 1) + " and col: " + (exp.col + 1));
         }
-      }
+      } else if ()
     }
   }
 
