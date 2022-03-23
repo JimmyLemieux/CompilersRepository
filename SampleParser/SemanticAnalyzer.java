@@ -448,7 +448,7 @@ public class SemanticAnalyzer implements AbsynVisitor {
     // For the typemismatch check in function call!
     while (tempArgs2 != null && tempFunArgs != null) {
       VariableDeclaration tempVd = (VariableDeclaration) tempFunArgs.head;
-      boolean isintHack = tempArgs2.head instanceof IntExp;
+      boolean isintHack = tempArgs2.head instanceof IntExp || tempArgs2.head instanceof OpExp || tempArgs2.head instanceof SimpleVarExp;
       boolean canSkip = isintHack && isInteger(tempVd);
 
       if ( !canSkip && isInteger(tempArgs2.head.dtype) != isInteger(tempVd)) {

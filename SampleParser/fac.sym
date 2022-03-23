@@ -8,7 +8,7 @@ Entering the global scope:
     Leaving the scope for function: test:
     Entering the scope for function: main:
         y: VOID
-    k: INT
+    k: VOID
     m: INT
     Leaving the scope for function: main:
 output:(INT) -> VOID

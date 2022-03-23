@@ -4,8 +4,8 @@ int test(int k, int c, int m){
 int main(void){
     void y;
     int m;
-    int k;
+    void k;
     k = 5;
-    m = k + test(y,2,3);
+    m = k + test(k+m,2,3);
     test();
 }
