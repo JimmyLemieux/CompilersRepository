@@ -371,17 +371,20 @@ public class SemanticAnalyzer implements AbsynVisitor {
         } else rhsType = findType(tempRhs.funName);
       } else if (varAssign.rhs instanceof SimpleVarExp) {
         SimpleVarExp tempExp = (SimpleVarExp) varAssign.rhs;
-        SimpleVar tempSimp = (SimpleVar) tempExp.var;
-        NodeType left = findVariable(templhs.varName);
-        NodeType right = findVariable(tempSimp.varName);
-        if (left != null && right != null && left.def instanceof ArrayDec && right.def instanceof ArrayDec) {
-          arraySkip = true;
-          System.err.println("Error: Cannot Assign Array to another Array. At row: " + (tempSimp.row + 1) + " At col: " + (tempSimp.col + 1));
+        if (tempExp.var instanceof SimpleVar) {
+          SimpleVar tempSimp = (SimpleVar) tempExp.var;
+          rhsType = findType(tempSimp.varName);
+          NodeType left = findVariable(templhs.varName);
+          NodeType right = findVariable(tempSimp.varName);
+          if (left != null && right != null && left.def instanceof ArrayDec && right.def instanceof ArrayDec) {
+            arraySkip = true;
+            System.err.println("Error: Cannot Assign Array to another Array. At row: " + (tempSimp.row + 1) + " At col: " + (tempSimp.col + 1));
+          }
+        } else if (tempExp.var instanceof SimpleIndexVar) {
+          SimpleIndexVar tempIndex = (SimpleIndexVar) tempExp.var;
+          rhsType = findType(tempIndex.varName);
         }
-      }
-      
-      
-      else {
+      } else {
         rhsType = 1;
       }
     } else if (varAssign.lhs instanceof SimpleIndexVar) {
@@ -400,9 +403,27 @@ public class SemanticAnalyzer implements AbsynVisitor {
         } else if (tempRhs.funName.equals("output")) {
           rhsType = 0;
         } else rhsType = findType(tempRhs.funName);
+      } else if (varAssign.rhs instanceof SimpleVarExp) {
+        SimpleVarExp tempExp = (SimpleVarExp) varAssign.rhs;
+        if (tempExp.var instanceof SimpleVar) {
+          SimpleVar tempSimp = (SimpleVar) tempExp.var;
+          rhsType = findType(tempSimp.varName);
+          NodeType left = findVariable(templhs.varName);
+          NodeType right = findVariable(tempSimp.varName);
+          if (left != null && right != null && left.def instanceof ArrayDec && right.def instanceof ArrayDec) {
+            arraySkip = true;
+            System.err.println("Error: Cannot Assign Array to another Array. At row: " + (tempSimp.row + 1) + " At col: " + (tempSimp.col + 1));
+          }
+        } else if (tempExp.var instanceof SimpleIndexVar) {
+          SimpleIndexVar tempIndex = (SimpleIndexVar) tempExp.var;
+          rhsType = findType(tempIndex.varName);
+        }
       } else {
         rhsType = 1;
       }
+    } else {
+      lhsType = 1;
+      rhsType = 1;
     }
 
     if (lhsType != rhsType && lhsType != -2 && !arraySkip) {
@@ -564,7 +585,7 @@ public class SemanticAnalyzer implements AbsynVisitor {
     currentFunctionScope = "";
     // Check the return ty
     if (isInteger(exp) && !didHitReturnState) {
-      System.err.println("Error: Expecting a return for INT return function with name: " + (exp.funBody) + " at row: " + (exp.row + 1) + " at col: " + (exp.col + 1));
+      System.err.println("Error: Expecting a return for INT return function with name: " + (exp.funName) + " at row: " + (exp.row + 1) + " at col: " + (exp.col + 1));
     }
 
     indent(globalLevel);

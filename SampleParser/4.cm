@@ -1,7 +1,8 @@
 /*Errors:
-Error: Invalid return type. Expecting INT for function: fun1 at row: 7 at col: 3
-Error: Unknown variable named q at row: 15 and col: 12
-Error: Type Mismatch for variable with name: arr at row: 16 at col: 3*/
+Error: Invalid return type. Expecting INT for function: fun1 at row: 9 at col: 3
+Error: Cannot Assign Array to another Array. At row: 18 At col: 12
+Error: Type Mismatch for variable with name: arr at row: 19 at col: 3
+*/
 int fun1(void){
   int y;
   return;
@@ -11,8 +12,9 @@ void fun2(void){
 }
 int main(void){
   int arr[20];
+  int q[10];
   int m;
-  arr[5] = q;
+  arr[2] = q;
   arr[m] = fun2();
   return fun1();
 }

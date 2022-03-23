@@ -1,0 +1,18 @@
+The Semantic analyzer tree is:
+Entering the global scope:
+    Entering the scope for function: testing:
+        c: INT
+    k: INT
+    Leaving the scope for function: testing:
+    Entering the scope for function: f1:
+        qr: INT
+    Leaving the scope for function: f1:
+    Entering the scope for function: main:
+        sqr: INT
+    Leaving the scope for function: main:
+output:(INT) -> VOID
+input:(VOID) -> INT
+testing:(INT) -> INT
+main:(VOID) -> INT
+f1:(VOID) -> VOID
+Leaving the global scope

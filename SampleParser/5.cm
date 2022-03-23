@@ -1,16 +1,6 @@
-/* Variables defined as void type on lines 15 and 16
-      -> Variables will be then stored as INT type to avoid repeated errors
-   Error: variables cannot be defined as VOID type, at line:15 column:10
-   Error: variables cannot be defined as VOID type, at line:16 column:4
-
-   Attempting to set INT array to an INT on line 22
-   Error: Invalid types for statement, at line:22 column:4
-
-   Attempting to set 2 arrays equal to each other on line 24
-   Error: Arrays cannot be used in assinments, at line:24 column:4
-*/Errors:
-Error: Invalid array index. Array index cannot be VOID. Function name: test at row: 23 and col: 12
-Error: Array not defined with name: arrrrr at row: 24 at col: 5
+/*
+Error: Invalid array index. Array index cannot be VOID. Function name: test at row: 13 and col: 12
+Error: Array not defined with name: arrrrr at row: 14 at col: 5
 */
 void test(int c){
 }

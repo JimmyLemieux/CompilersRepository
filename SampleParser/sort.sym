@@ -1,0 +1,25 @@
+The Semantic analyzer tree is:
+Entering the global scope:
+    Entering the scope for function: minloc:
+        Entering a new block
+            Entering a new block
+            Leaving a new block
+            Leaving a new block
+                Leaving the scope for function: minloc:
+        Entering the scope for function: sort:
+            Entering a new block
+            Leaving a new block
+                Leaving the scope for function: sort:
+        Entering the scope for function: main:
+            Entering a new block
+            Leaving a new block
+            Entering a new block
+            Leaving a new block
+                Leaving the scope for function: main:
+    output:(INT) -> VOID
+    input:(VOID) -> INT
+    minloc:(INT,INT,INT) -> INT
+    x: INT[10]
+    main:(VOID) -> VOID
+    sort:(INT,INT,INT) -> VOID
+Leaving the global scope

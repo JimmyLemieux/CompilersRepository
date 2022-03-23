@@ -6,10 +6,12 @@ Error: Calling function with incorrect number of paramaters for function name: t
 int test(int k, int c){
     return;
 }
+
 int main(void){
     void y;
     int m;
     int k;
     k = 5;
     m = k + test(k+m,2,3);
+    return 0;
 }
