@@ -369,6 +369,25 @@ public class SemanticAnalyzer implements AbsynVisitor {
       } else {
         rhsType = 1;
       }
+    } else if (varAssign.lhs instanceof SimpleIndexVar) {
+      SimpleIndexVar templhs = (SimpleIndexVar) varAssign.lhs;
+      // if (!inTable(templhs.varName)) {
+      //   System.err.println("Error: Unknown Variable with name: " + templhs.varName + " at row: " + templhs.row + " at col: " + templhs.col);
+      // }
+      lhsType = findType(templhs.varName);
+      lhsName = templhs.varName;
+      row = templhs.row;
+      col = templhs.col;
+      if (varAssign.rhs instanceof CallingExp) {
+        CallingExp tempRhs = (CallingExp) varAssign.rhs;
+        if (tempRhs.funName.equals("input")) {
+          rhsType = 1;
+        } else if (tempRhs.funName.equals("output")) {
+          rhsType = 0;
+        } else rhsType = findType(tempRhs.funName);
+      } else {
+        rhsType = 1;
+      }
     }
 
     if (lhsType != rhsType && lhsType != -2) {
