@@ -406,6 +406,12 @@ public class SemanticAnalyzer implements AbsynVisitor {
 
     var.exp.accept(this, level);
 
+    ArrayList<NodeType> currentList = table.get(var.varName);
+    
+    if (currentList == null || currentList.isEmpty()) {
+      System.err.println("Error: Invalid array name of name: " + var.varName + " at row: " + (var.row + 1) + " at col: " + (var.col + 1));
+    }
+
     if (var.exp instanceof CallingExp) {
       CallingExp tempCall = (CallingExp) var.exp;
       if (!isInteger(tempCall.dtype)) {
