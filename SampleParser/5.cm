@@ -1,8 +1,10 @@
 /*
-Error: Invalid array index. Array index cannot be VOID. Function name: test at row: 13 and col: 12
-Error: Array not defined with name: arrrrr at row: 14 at col: 5
+Error: Invalid return type. Expecting VOID return for function: test at row: 6 at col: 5
+Error: Invalid array index. Array index cannot be VOID. Function name: test at row: 14 and col: 12
+Error: Array not defined with name: arrrrr at row: 15 at col: 5
 */
 void test(int c){
+    return 5;
 }
 
 int b[2];
