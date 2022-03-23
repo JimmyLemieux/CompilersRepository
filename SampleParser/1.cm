@@ -1,12 +1,17 @@
-/* File that contains no errors */
+/* file with no errors */
+int test;
+int arr[20];
 
-int k;
-
-void main(void){
-    int x;
-    int flag;
-    flag = 1;
-    while (x < 5){
-        x = x + 1;
+int main(int arg, int j){
+    int average;
+    int total;
+    int symbol;
+    while(total < average){
+        int symbol;
+        symbol = total + average;
+    }
+    if (total < average){
+        int flag;
+        flag = 1;
     }
 }

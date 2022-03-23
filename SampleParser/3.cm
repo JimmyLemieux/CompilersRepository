@@ -1,19 +1,17 @@
-/* Errors in the file:
-
-Error: No expression given for while condition! row: 5 col: 4
-
+/* Errors:
+Error: Unknown variable named j at row: 15 and col: 5
+Error: Invalid return type for function at row: 16 and col: 5
 */
-int test;
 
-
-int main(,void test){
-    int arr[15];
-    while(){
-        arr[0] = 3;
-    }
-    if(j = 2) {
-      j = j / 1;
-    }
-    y = input();
-
+int testing(int k){
+    int c;
+    k = 5;
+}
+void f1(void){
+    int qr;
+}
+int main(void){
+    int sqr;
+    j = 5;
+    return f1();
 }

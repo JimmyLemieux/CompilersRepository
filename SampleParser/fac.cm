@@ -1,11 +1,11 @@
-int test(int k, int c, int m){
-    int test2;
-}
-int main(void){
-    void y;
-    int m;
-    void k;
-    k = 5;
-    m = k + test(k+m,2,3);
-    test();
+ /* A program to compute the factorial value of an integer */ 
+void main(void) { 
+  int x; int fac; 
+  x = input(); 
+  fac = 1; 
+  while (x > 1) { 
+     fac = fac * x; 
+     x = x - 1; 
+  } 
+  output(fac); 
 }

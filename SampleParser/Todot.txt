@@ -11,9 +11,10 @@ void main(void y){
 
     d = b;
 }
-maybe check indenting.
 
 Above: 2 arrays assigned
+
+maybe check indenting.
 
 return type checks :
 

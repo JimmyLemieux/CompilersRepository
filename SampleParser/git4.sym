@@ -1,5 +1,0 @@
-The Semantic analyzer tree is:
-Entering the global scope:
-output:(INT) -> VOID
-input:(VOID) -> INT
-Leaving the global scope

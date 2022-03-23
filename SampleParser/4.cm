@@ -1,19 +1,18 @@
-/*Errors in the file: 
-1- Invalid Array Index! row: 4 col: 4
-*/
-int m;
-
-
-void gcd(int first, int second) { 
-   int a;
-   a = 2;
-   return a;
-}  
- 
-void main(void) { 
-   int test1; int test2;
-   int k[]; 
-   test1 = input();
-   test2 = input(); 
-   output(gcd(test1, test2)); 
+/*Errors:
+Error: Invalid return type. Expecting INT for function: fun1 at row: 7 at col: 3
+Error: Unknown variable named q at row: 15 and col: 12
+Error: Type Mismatch for variable with name: arr at row: 16 at col: 3*/
+int fun1(void){
+  int y;
+  return;
+}
+void fun2(void){
+    int c;
+}
+int main(void){
+  int arr[20];
+  int m;
+  arr[5] = q;
+  arr[m] = fun2();
+  return fun1();
 }

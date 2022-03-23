@@ -1,3 +1,0 @@
-1 - adding extra argument
-2- delete an extra argument
-3- maybe the void variable decleration
