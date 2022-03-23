@@ -233,6 +233,7 @@ public class SemanticAnalyzer implements AbsynVisitor {
   public void visit( IntExp exp, int level ) {
     // indent( level );
     //System.out.println( "IntExp: " + exp.value ); 
+    
   }
 
   public void visit( OpExp exp, int level ) {
@@ -292,7 +293,7 @@ public class SemanticAnalyzer implements AbsynVisitor {
       varName = tempCall.funName;
       if (findFunction(varName) != null) {
         if (findType(varName) != 1) {
-          System.err.println("Error: Right side of operation is not an integer or contains a VOID expression at row: " + (exp.right.row + 1) + " and col: " + (exp.right.col + 1));
+          System.err.println("Error: Right side of operation is not an integer or contains a VOID expression at row: " + (tempCall.row + 1) + " and col: " + (tempCall.col + 1));
         } 
       } else {
           System.err.println("Error: Undeclared operation at row: " + (exp.right.row + 1) + " col: " + (exp.right.col + 1));
@@ -447,7 +448,10 @@ public class SemanticAnalyzer implements AbsynVisitor {
     // For the typemismatch check in function call!
     while (tempArgs2 != null && tempFunArgs != null) {
       VariableDeclaration tempVd = (VariableDeclaration) tempFunArgs.head;
-      if (isInteger(tempArgs2.head.dtype) != isInteger(tempVd)) {
+      boolean isintHack = tempArgs2.head instanceof IntExp;
+      boolean canSkip = isintHack && isInteger(tempVd);
+
+      if ( !canSkip && isInteger(tempArgs2.head.dtype) != isInteger(tempVd)) {
         System.err.println("Error: Type mistmatch for function argument at row: " + (tempArgs2.row + 1) + " and col: " + (tempArgs2.col + 1));
       }
       tempArgs2 = tempArgs2.tail;
