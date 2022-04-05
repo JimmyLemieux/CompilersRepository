@@ -203,10 +203,10 @@ public class codeGenerator implements AbsynVisitor {
 		indent(globalLevel);
 		System.out.print(c.name + ":");
 		if (c.def instanceof FunctionDec) {
-			System.out.print("(");
+			// System.out.print("(");
 			FunctionDec f = (FunctionDec) c.def;
 			if (f.funName.equals("output")) {
-			System.out.println("INT) -> VOID");
+			// System.out.println("INT) -> VOID");
 			} else {
 			VarDecList vdl = f.param;
 			boolean isEmptyParam = (vdl == null);
@@ -228,21 +228,15 @@ public class codeGenerator implements AbsynVisitor {
 			if (isEmptyParam) System.out.print("VOID");
 			System.out.print(") -> ");
 			if (isInteger(f)) {
-				System.out.println("INT");
+				// System.out.println("INT");
 			} else {
-				System.out.println("VOID");
+				// System.out.println("VOID");
 			}
 			}
 		} else if (c.def instanceof VariableDeclaration) {
 			VariableDeclaration vd = (VariableDeclaration) c.def;
-			if (isInteger(vd)) {
-			System.out.println(" INT");
-			} else System.out.println(" VOID");
 		} else if (c.def instanceof ArrayDec) {
 			ArrayDec ad = (ArrayDec) c.def;
-			if (isInteger(ad)) {
-			System.out.println(" INT[" + ad.arraySize.value + "]");
-			} else System.out.println(" VOID");
 		}
 		}
 	}
@@ -335,20 +329,20 @@ public class codeGenerator implements AbsynVisitor {
 		// System.out.println("Error: No expression given for if condition! row: " + exp.row + " col: " + exp.col);
 	}
 	indent(globalLevel);
-	System.out.println("Entering a new block");
+	// System.out.println("Entering a new block");
 	if (exp.thenpart != null) {
 		exp.thenpart.accept( this, level );
 	}
 	printLevel(globalLevel);
 	delete(level);
 	indent(globalLevel);
-	System.out.println("Leaving a new block");
+	// System.out.println("Leaving a new block");
 	if (exp.elsepart != null ) {
 		indent(globalLevel);
-		System.out.println("Entering a new block");
+		// System.out.println("Entering a new block");
 		exp.elsepart.accept( this, level );
 		printLevel(globalLevel);
-		System.out.println("Leaving a new block");
+		// System.out.println("Leaving a new block");
 		delete(level);
 	}
 	//globalLevel--;
@@ -688,7 +682,7 @@ public class codeGenerator implements AbsynVisitor {
 	level++;
 	globalLevel++;
 	indent(globalLevel);
-	System.out.println("Entering the scope for function: " + exp.funName + ":");
+	// System.out.println("Entering the scope for function: " + exp.funName + ":");
 
 	VarDecList parms = exp.param;
 	while (parms != null) {
@@ -714,7 +708,7 @@ public class codeGenerator implements AbsynVisitor {
 	printLevel(globalLevel);
 	delete(level);
 	indent(globalLevel);
-	System.out.println("Leaving the scope for function: " + exp.funName + ":");
+	// System.out.println("Leaving the scope for function: " + exp.funName + ":");
 	didHitReturnState = false;
 	globalLevel--;
 	}
@@ -788,12 +782,12 @@ public class codeGenerator implements AbsynVisitor {
 		//System.out.println("Error: No expression given for while condition! row: " + exp.row + " col: " + exp.col);
 	}
 	indent(globalLevel);
-	System.out.println("Entering a new block");
+	// System.out.println("Entering a new block");
 	exp.exps.accept(this, level);
 	printLevel(globalLevel);
 	delete(level);
 	indent(globalLevel);
-	System.out.println("Leaving a new block");
+	// System.out.println("Leaving a new block");
 	globalLevel--;
 	}
 

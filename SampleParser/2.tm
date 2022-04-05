@@ -1,5 +1,5 @@
 * C-Minus Compilation to TM Code
-* File: 1.tm
+* File: 2.tm
 * Standard prelude:
   0:    LD 6, 0(0)	load gp with maxaddress
   1:   LDA 5, 0(6)	copy to gp to fp

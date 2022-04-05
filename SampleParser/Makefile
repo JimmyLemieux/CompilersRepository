@@ -31,7 +31,7 @@ testSym:
 	java -classpath /usr/share/java/cup.jar:. CM $n.cm -s
 
 testCode:
-	java -classpath /usr/share/java/cup.jar:. CM $n cm -c
+	java -classpath /usr/share/java/cup.jar:. CM $n.cm -c
 
 run:
 	java -classpath /usr/share/java/cup.jar:. CM 5.cm -s
