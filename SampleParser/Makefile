@@ -9,7 +9,7 @@ CUP=cup
 
 all: clean CM.class
 
-CM.class: absyn/*.java parser.java sym.java Lexer.java ShowTreeVisitor.java Scanner.java CM.java
+CM.class: absyn/*.java parser.java sym.java Lexer.java ShowTreeVisitor.java codeGenerator.java Scanner.java CM.java
 
 %.class: %.java
 	$(JAVAC) $(CLASSPATH) $^
@@ -29,6 +29,9 @@ test:
 
 testSym:
 	java -classpath /usr/share/java/cup.jar:. CM $n.cm -s
+
+testCode:
+	java -classpath /usr/share/java/cup.jar:. CM $n cm -c
 
 run:
 	java -classpath /usr/share/java/cup.jar:. CM 5.cm -s

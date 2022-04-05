@@ -9,7 +9,7 @@ public class NodeType {
   public Declaration def;
   public int level;
 
-  public NodeType(String name, Declaration def, int level) {
+  public NodeType(String name, Declaration def, int level, int offset) {
     this.name = name;
     this.def = def;
     this.level = level;

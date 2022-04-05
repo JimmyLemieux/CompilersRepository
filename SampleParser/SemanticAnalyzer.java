@@ -466,7 +466,7 @@ public class SemanticAnalyzer implements AbsynVisitor {
         exp.type.type = 0;
       }
     }
-    NodeType newNode = new NodeType(exp.arrayName, exp, level);
+    NodeType newNode = new NodeType(exp.arrayName, exp, level, 0);
     insert(newNode);
   }
 
@@ -559,7 +559,7 @@ public class SemanticAnalyzer implements AbsynVisitor {
     if (check != null && check.get(0).level == level) {
       System.err.println("Error: Redefined Function " + exp.funName + " at the same level, at line: " + exp.row + " column: " + exp.col);
     } else {
-      NodeType newNode = new NodeType(exp.funName, exp, level);
+      NodeType newNode = new NodeType(exp.funName, exp, level, 0);
       insert(newNode);
     }
 
@@ -636,7 +636,7 @@ public class SemanticAnalyzer implements AbsynVisitor {
       if (exp.type.type == 0) {
         System.err.println("Error: variables cannot be defined as VOID type, at line: " + (exp.row + 1) + " column: " + (exp.col + 1));
       }
-      NodeType newNode = new NodeType(exp.sname, exp, level);
+      NodeType newNode = new NodeType(exp.sname, exp, level, 0);
       insert(newNode);
     }
   }
