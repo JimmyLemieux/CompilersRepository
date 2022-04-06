@@ -1,0 +1,12 @@
+/* File that contains no errors */
+
+int k;
+
+void main(void){
+    int x;
+    int flag;
+    flag = 1;
+    while (x < 5){
+        x = x + 1;
+    }
+}

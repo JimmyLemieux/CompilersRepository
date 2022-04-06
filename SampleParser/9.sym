@@ -1,12 +1,17 @@
 The Semantic analyzer tree is:
 Entering the global scope:
+    Entering the scope for function: gcd:
+        a: INT
+    first: INT
+    second: INT
+    Leaving the scope for function: gcd:
     Entering the scope for function: main:
-        c: INT
-    d: INT[3]
-    y: VOID
+        test2: INT
+    test1: INT
     Leaving the scope for function: main:
 output:(INT) -> VOID
 input:(VOID) -> INT
-b: INT[2]
+gcd:(INT,INT) -> INT
 main:(VOID) -> VOID
+m: INT
 Leaving the global scope

@@ -23,6 +23,10 @@ In order to build the Parser alone type "make parser.java"  and to display the S
 In order to build the Symbol table type "make" then run the command to show the errors/typechecking:
     "java -classpath /usr/share/java/cup.jar:. CM 1.cm -s"
 
+In order to convert code to assembley type this command:
+    "java -classpath /usr/share/java/cup.jar:. CM $1.cm -c"
+
+
 Test Files:
 Some test files are provided with the submission which are 1.cm, 2.cm, 3.cm, 4.cm and 5.cm. Each test file covers different aspect of the program. Also, there are two additional files that can be tested which are fac.cm and gcd.cm
 
@@ -33,3 +37,6 @@ Limitations C1: While many cases are covered in the Parser, there might be some 
 
 Limitations C2:
 We assumed that the variables can be accepted as void from the parser. We then did the type checking in this portion of the checkpoint. If a variable is defined as void then we return an error. When said void variable is used in any other expression then errors will be thrown in each case.
+
+Limitations C3:
+We also assumed that we are still allowed to print semantic errors when running the -c flag. As we currently are only handling the prelude and the finale, there is no need to stop assembly conversion if a file is invalid or contains errors. Limitations from C1 and C2 still apply for this checkpoint!

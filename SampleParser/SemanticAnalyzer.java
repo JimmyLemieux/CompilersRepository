@@ -172,7 +172,8 @@ public class SemanticAnalyzer implements AbsynVisitor {
         } else if (c.def instanceof ArrayDec) {
           ArrayDec ad = (ArrayDec) c.def;
           if (isInteger(ad)) {
-            System.out.println(" INT[" + ad.arraySize.value + "]");
+            if (ad.arraySize != null)
+              System.out.println(" INT[" + ad.arraySize.value + "]");
           } else System.out.println(" VOID");
         }
       }

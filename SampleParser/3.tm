@@ -1,5 +1,5 @@
 * C-Minus Compilation to TM Code
-* File: 1.tm
+* File: 3.tm
 * Standard prelude:
   0:    LD 6, 0(0)	load gp with maxaddress
   1:   LDA 5, 0(6)	copy to gp to fp
@@ -16,7 +16,7 @@
  10:    LD 7, -1(5)	return to caller
   3:   LDA 7, 7(7) 	jump around i/o code
 * End of standard prelude.
-                                                     11:  HALT 0, 0, 0	
+                                     11:  HALT 0, 0, 0	
  12:    ST 5, -2(5)	push ofp
  13:   LDA 5, -2(5)	push frame
  14:   LDA 0, 1(7)	load ac with ret ptr

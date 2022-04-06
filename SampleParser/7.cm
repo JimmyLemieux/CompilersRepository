@@ -1,0 +1,15 @@
+/* Errors in the file:
+1- Error: No expression given for if condition! row: 6 col: 4
+2- Error: Unrecognized operator at row: 9 and col: 8
+ */
+int test[20];
+
+int main (void test){
+    int x;
+    int s;
+    x = 5;
+    if(){
+        x  = 4;
+    }
+    s = 1 & 2;
+}
